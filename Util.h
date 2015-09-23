@@ -12,13 +12,22 @@
 //Nombres respectivos de los eventos
 enum Nombre{LlegaAComputadoraA,LlegaAComputadoraB,LlegaAComputadoraC};
 
+struct Archivos{
+	int tamano;
+};
+
+struct Computadora{
+	std::list<Archivos>* ArchivosTipo1;
+	std::list<Archivos>* ArchivosTipo2;
+};
+
 class Evento {
 public:
-    int reloj;
+	double reloj;
     Nombre evento;
     
     Evento();
-    Evento(int reloj,Nombre evento);
+	Evento(double reloj,Nombre evento);
     ~Evento();
 };
 

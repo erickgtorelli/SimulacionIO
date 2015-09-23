@@ -9,13 +9,16 @@
 class Simulacion
 {
 private:
-	int Reloj;
+	double Reloj;
 	Evento* EventoActual;
 	Util* ManejadorDeEventos;
+	Computadora ComputadoraA;
+	Computadora ComputadoraB;
+	Computadora ComputadoraC;
 public:
 	Simulacion();
 	void run(int tiempo);
-	void evento_LlegaAComputadoraC();
+	void evento_LlegaAComputadoraC(Evento *evento);
 };
 
 #endif // SIMULACION_H

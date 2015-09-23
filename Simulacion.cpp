@@ -26,15 +26,31 @@ void Simulacion::run(int tiempo)
 			break;
 
 		case LlegaAComputadoraC:
-			evento_LlegaAComputadoraC();
+			evento_LlegaAComputadoraC(EventoActual);
 			break;
 		}
 	}
 }
 
-void Simulacion::evento_LlegaAComputadoraC()
+void Simulacion::evento_LlegaAComputadoraC(Evento* evento)
 {
-	std::cout<<rand();
+	//Crear archivo y meterlo en la cola de archivos correspondiente
+
+
+	//Generar siguiente Arribo
+	double z = 0;
+	double n = 0;
+	//Generacion del Z
+	for(int i =0;i<12;i++)
+	n += ((double) rand() / (RAND_MAX));
+
+	z = n - 6;
+	//Calculamos el X
+	double x = 5 + 0.1*z;
+
+	//Actualizo el siguiente arribo y lo vuelvo a encolar
+	evento->reloj = Reloj + x;
+	ManejadorDeEventos->agregarEventoAlaCola(evento);
 }
 
 

@@ -9,7 +9,7 @@
 Evento::Evento(){
     
 }
-Evento::Evento(int reloj, Nombre evento){
+Evento::Evento(double reloj, Nombre evento){
     this->reloj = reloj;
     this->evento = evento;
     
