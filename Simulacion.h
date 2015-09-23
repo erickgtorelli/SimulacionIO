@@ -15,8 +15,11 @@ private:
 	Computadora ComputadoraA;
 	Computadora ComputadoraB;
 	Computadora ComputadoraC;
+
+	inline int generarTamanoDelArchivo(){return rand() % 64 + 1;}
 public:
 	Simulacion();
+	~Simulacion();
 	void run(int tiempo);
 	void evento_LlegaAComputadoraC(Evento *evento);
 };

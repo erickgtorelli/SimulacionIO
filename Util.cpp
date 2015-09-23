@@ -12,6 +12,7 @@ Evento::Evento(){
 Evento::Evento(double reloj, Nombre evento){
     this->reloj = reloj;
     this->evento = evento;
+	this->tamano = 0;
     
 }
 Evento::~Evento(){
@@ -26,7 +27,11 @@ Util::Util(const Util& orig) {
 }
 
 Util::~Util() {
-    delete ColaDeEventos;
+	std::list<Evento*>::iterator current = ColaDeEventos->begin();
+	for(current;current != ColaDeEventos->end();current++){
+		delete *current;
+	}
+	delete ColaDeEventos;
 }
 
 bool Util::agregarEventoAlaCola(Evento* event){
@@ -78,7 +83,16 @@ Computadora::Computadora()
 
 Computadora::~Computadora()
 {
-
+	std::list<Archivos*>::iterator current = ArchivosTipo1->begin();
+	for(current;current != ArchivosTipo1->end();current++){
+		delete *current;
+	}
+	delete ArchivosTipo1;
+	std::list<Archivos*>::iterator current1 = ArchivosTipo2->begin();
+	for(current1;current1 != ArchivosTipo2->end();current1++){
+		delete *current1;
+	}
+	delete ArchivosTipo2;
 }
 
 bool Computadora::agregarArchivoTipo1(Archivos* archivo)
@@ -185,4 +199,10 @@ bool Computadora::Tipo1Vacia()
 bool Computadora::Tipo2Vacia()
 {
 	return ArchivosTipo2->empty();
+}
+
+
+Archivos::Archivos(int tamano)
+{
+	this->tamano = tamano;
 }

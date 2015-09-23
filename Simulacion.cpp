@@ -9,7 +9,15 @@ Simulacion::Simulacion()
 	ManejadorDeEventos = new Util();
 
 	//Iniciarlizar primeros eventos para correr la simulacion
+	Evento* LlegaAC = new Evento(0,LlegaAComputadoraC);
+	ManejadorDeEventos->agregarEventoAlaCola(LlegaAC);
 }
+
+Simulacion::~Simulacion()
+{
+
+}
+
 
 void Simulacion::run(int tiempo)
 {
@@ -35,8 +43,9 @@ void Simulacion::run(int tiempo)
 void Simulacion::evento_LlegaAComputadoraC(Evento* evento)
 {
 	//Crear archivo y meterlo en la cola de archivos correspondiente
+	//---generar tipo y meterlo en la cola ---//
 
-
+	Archivos* archivo = new Archivos(generarTamanoDelArchivo());
 	//Generar siguiente Arribo
 	double z = 0;
 	double n = 0;

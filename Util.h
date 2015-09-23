@@ -10,10 +10,15 @@
 #include <list>
 
 //Nombres respectivos de los eventos
-enum Nombre{LlegaAComputadoraA,LlegaAComputadoraB,LlegaAComputadoraC};
+enum Nombre{LlegaAComputadoraA,LlegaAComputadoraB,LlegaAComputadoraC,LiberaTokenA,LiberaTokenB,LiberaTokenC,
+		   TernimaDePonerEnLineaA,TernimaDePonerEnLineaB,TernimaDePonerEnLineaC,LlegaAServidorAntivirus,
+			FinalizaRevisionDeVirus,SeLiberaLineaRouter1,SeLiberaLineaRouter2};
 
-struct Archivos{
+class Archivos{
+public:
 	int tamano;
+
+	Archivos(int tamano);
 };
 
 class Computadora{
@@ -48,6 +53,7 @@ class Evento {
 public:
 	double reloj;
     Nombre evento;
+	int tamano;
     
     Evento();
 	Evento(double reloj,Nombre evento);
