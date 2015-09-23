@@ -3,6 +3,7 @@
 Simulacion::Simulacion()
 {
 	Reloj = 0;
+	srand (time(NULL));
 	//Cambiar valor al default para el switch despues
 	EventoActual = 0;
 	ManejadorDeEventos = new Util();
@@ -17,7 +18,7 @@ void Simulacion::run(int tiempo)
 			EventoActual = ManejadorDeEventos->sacarSiguienteEvento();
 		}
 
-		switch(EventoActual){
+		switch(EventoActual->evento){
 		case LlegaAComputadoraA:
 			break;
 
@@ -33,7 +34,7 @@ void Simulacion::run(int tiempo)
 
 void Simulacion::evento_LlegaAComputadoraC()
 {
-
+	std::cout<<rand();
 }
 
 

@@ -2,11 +2,15 @@
 #define SIMULACION_H
 
 #include "Util.h"
+#include <cstdlib>
+#include <ctime>
+#include <iostream>
+
 class Simulacion
 {
 private:
 	int Reloj;
-	int EventoActual;
+	Evento* EventoActual;
 	Util* ManejadorDeEventos;
 public:
 	Simulacion();
