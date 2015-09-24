@@ -1,4 +1,5 @@
 #include "Simulacion.h"
+#include "math.h" //no se si aqui va el include, pero lo necesito para el log --Amanda
 
 Simulacion::Simulacion()
 {
@@ -40,6 +41,22 @@ void Simulacion::run(int tiempo)
 	}
 }
 
+void Simulacion::evento_LlegaAComputadoraA(Evento* evento)
+{
+	//Crear archivo y meterlo en la cola de archivos correspondiente
+	//---generar tipo y meterlo en la cola ---//
+
+	//Generar siguiente Arribo - exponencial
+	r += ((double) rand() / (RAND_MAX)); //valor aleatorio entre 0 y 1
+	 
+	double x = -( (log (r) ) / 5) ; //x es una v.a. para la exponencial
+
+	//Actualizo el siguiente arribo y lo vuelvo a encolar
+	evento->reloj = Reloj + x;
+	ManejadorDeEventos->agregarEventoAlaCola(evento);
+}
+
+
 void Simulacion::evento_LlegaAComputadoraC(Evento* evento)
 {
 	//Crear archivo y meterlo en la cola de archivos correspondiente
@@ -60,6 +77,16 @@ void Simulacion::evento_LlegaAComputadoraC(Evento* evento)
 	//Actualizo el siguiente arribo y lo vuelvo a encolar
 	evento->reloj = Reloj + x;
 	ManejadorDeEventos->agregarEventoAlaCola(evento);
+}
+
+int Simulacion::generaPrioridad{
+	w = rand() % 100; //generación de número aleatorio entre 0-99
+	if (w < 24) { //tipo 1
+		return 1;
+	}
+	else { //tipo 2
+		return 2;
+	}
 }
 
 
