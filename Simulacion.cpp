@@ -1,5 +1,5 @@
 #include "Simulacion.h"
-#include "math.h" //no se si aqui va el include, pero lo necesito para el log --Amanda
+#include "math.h"
 
 Simulacion::Simulacion()
 {
@@ -77,6 +77,41 @@ void Simulacion::evento_LlegaAComputadoraC(Evento* evento)
 	//Actualizo el siguiente arribo y lo vuelvo a encolar
 	evento->reloj = Reloj + x;
 	ManejadorDeEventos->agregarEventoAlaCola(evento);
+}
+
+void Simulacion::evento_LiberaTokenA(int ttoken){
+
+	//int t = tiempotoken; (el tiempo que el usuario le asigna al token, no se donde esta)
+	bool archivos = true;
+	
+	while (t != 0 && archivos) {
+		if (Computadora.Tipo1Vacia()){
+			if (Computadora.Tipo2Vacia()){
+				archivos = false;
+			}
+			else { //hay minimo 1 archivo de tipo 2
+				Computadora.sacarArchivoTipo2();
+				
+				t = t - Archivo.tamano() * 0.5;
+			
+				//termina de poner en linea				
+				
+			}
+		} 
+		else { //hay minimo 1 archivo de tipo 1
+			Computadora.sacarArchivoTipo1();
+			
+			t = t - Archivo.tamano() * 0.5;
+			
+			//termina de poner en linea
+		}
+	
+	}
+	
+	//programar libera token B
+	
+	delete EventoActual;
+
 }
 
 int Simulacion::generaPrioridad{
