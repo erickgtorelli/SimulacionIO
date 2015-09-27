@@ -20,8 +20,10 @@ private:
 
     inline int generarTamanoDelArchivo(){return rand() % 64 + 1;}
     int generaPrioridad();
-    void evento_LiberaTokenA(Evento* evento);
-    void evento_LlegaAComputadoraA(Evento *evento);
+    void evento_LiberaTokenA();
+    void evento_LlegaAComputadoraA();
+    void evento_TerminaDePonerEnLinea();
+    void evento_LlegaAComputadoraC();
     /**
      * @brief impresionEstadoActual muestra informacion basica del estado de la simulacion
      * @param evento actual corriendo
@@ -32,7 +34,7 @@ public:
 	Simulacion();
 	~Simulacion();
     void run(int tiempoReloj,int tiempoToken);
-	void evento_LlegaAComputadoraC(Evento *evento);
+
 };
 
 #endif // SIMULACION_H

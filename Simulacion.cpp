@@ -37,15 +37,15 @@ void Simulacion::run(int tiempoReloj,int tiempoToken)
 			break;
 
 		case LlegaAComputadoraC:
-			evento_LlegaAComputadoraC(EventoActual);
+            evento_LlegaAComputadoraC();
 			break;
 		}
 	}
 }
 
-void Simulacion::evento_LlegaAComputadoraA(Evento* evento)
+void Simulacion::evento_LlegaAComputadoraA()
 {
-    Reloj = evento->reloj;
+    Reloj = EventoActual->reloj;
 
 	//Crear archivo y meterlo en la cola de archivos correspondiente
 	//---generar tipo y meterlo en la cola ---//
@@ -57,8 +57,8 @@ void Simulacion::evento_LlegaAComputadoraA(Evento* evento)
 	double x = -( (log (r) ) / 5) ; //x es una v.a. para la exponencial
 
 	//Actualizo el siguiente arribo y lo vuelvo a encolar
-	evento->reloj = Reloj + x;
-    ManejadorDeEventos->agregarEventoAlaCola(evento);
+    EventoActual->reloj = Reloj + x;
+    ManejadorDeEventos->agregarEventoAlaCola(EventoActual);
 }
 
 void Simulacion::impresionEstadoActual()
@@ -77,9 +77,9 @@ void Simulacion::impresionEstadoActual()
 }
 
 
-void Simulacion::evento_LlegaAComputadoraC(Evento* evento)
+void Simulacion::evento_LlegaAComputadoraC()
 {
-    Reloj = evento->reloj;
+    Reloj = EventoActual->reloj;
     double z = 0;
     double n = 0;
     //Crear archivo y meterlo en la cola de archivos correspondiente
@@ -98,13 +98,13 @@ void Simulacion::evento_LlegaAComputadoraC(Evento* evento)
 	//Calculamos el X
 	double x = 5 + 0.1*z;
 	//Actualizo el siguiente arribo y lo vuelvo a encolar
-	evento->reloj = Reloj + x;
-	ManejadorDeEventos->agregarEventoAlaCola(evento);
+    EventoActual->reloj = Reloj + x;
+    ManejadorDeEventos->agregarEventoAlaCola(EventoActual);
 }
 
-void Simulacion::evento_LiberaTokenA(Evento* evento){
+void Simulacion::evento_LiberaTokenA(){
 
-    Reloj = evento->reloj;
+    Reloj = EventoActual->reloj;
     int t = tiempoToken;
 	bool archivos = true;
     Archivos* archivo;
