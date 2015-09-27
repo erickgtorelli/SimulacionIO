@@ -58,16 +58,31 @@ void Simulacion::evento_LlegaAComputadoraA(Evento* evento)
 
 	//Actualizo el siguiente arribo y lo vuelvo a encolar
 	evento->reloj = Reloj + x;
-	ManejadorDeEventos->agregarEventoAlaCola(evento);
+    ManejadorDeEventos->agregarEventoAlaCola(evento);
+}
+
+void Simulacion::impresionEstadoActual()
+{
+    printf("Reloj: %f \n",Reloj);
+    printf("Evento actual: %d \n",EventoActual->evento);
+    printf("Cola 1 Computadora A: %d \n Cola 2 Computadora A: %d \n",
+           ComputadoraA.Tipo1Size(),
+           ComputadoraA.Tipo2Size());
+    printf("Cola 1 Computadora B: %d \n Cola 2 Computadora B: %d \n",
+           ComputadoraB.Tipo1Size(),
+           ComputadoraB.Tipo2Size());
+    printf("Cola 1 Computadora C: %d \n Cola 2 Computadora C: %d \n",
+           ComputadoraC.Tipo1Size(),
+           ComputadoraC.Tipo2Size());
 }
 
 
 void Simulacion::evento_LlegaAComputadoraC(Evento* evento)
 {
     Reloj = evento->reloj;
-
+    double z = 0;
+    double n = 0;
     //Crear archivo y meterlo en la cola de archivos correspondiente
-
 	Archivos* archivo = new Archivos(generarTamanoDelArchivo());
     if(generaPrioridad() == 1){
         ComputadoraC.agregarArchivoTipo1(archivo);
@@ -75,18 +90,13 @@ void Simulacion::evento_LlegaAComputadoraC(Evento* evento)
     else{
         ComputadoraC.agregarArchivoTipo2(archivo);
     }
-
 	//Generar siguiente Arribo
-	double z = 0;
-	double n = 0;
 	//Generacion del Z
 	for(int i =0;i<12;i++)
 	n += ((double) rand() / (RAND_MAX));
-
 	z = n - 6;
 	//Calculamos el X
 	double x = 5 + 0.1*z;
-
 	//Actualizo el siguiente arribo y lo vuelvo a encolar
 	evento->reloj = Reloj + x;
 	ManejadorDeEventos->agregarEventoAlaCola(evento);

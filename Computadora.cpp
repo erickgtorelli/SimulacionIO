@@ -126,6 +126,16 @@ bool Computadora::Tipo2Vacia()
     return ArchivosTipo2->empty();
 }
 
+int Computadora::Tipo1Size()
+{
+    return ArchivosTipo1->size();
+}
+
+int Computadora::Tipo2Size()
+{
+    return ArchivosTipo2->size();
+}
+
 
 Archivos::Archivos(int tamano)
 {

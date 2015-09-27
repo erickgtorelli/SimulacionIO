@@ -28,6 +28,9 @@ public:
      */
     bool Tipo1Vacia();
     bool Tipo2Vacia();
+
+    int Tipo1Size();
+    int Tipo2Size();
     /**
      * @brief sacarArchivoTipo1
      * @param Max es el tamano maximo que se puede trasmitir

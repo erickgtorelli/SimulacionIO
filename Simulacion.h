@@ -6,7 +6,7 @@
 #include <ctime>
 #include <iostream>
 #include "Computadora.h"
-
+#include <string>
 class Simulacion
 {
 private:
@@ -22,6 +22,12 @@ private:
     int generaPrioridad();
     void evento_LiberaTokenA(Evento* evento);
     void evento_LlegaAComputadoraA(Evento *evento);
+    /**
+     * @brief impresionEstadoActual muestra informacion basica del estado de la simulacion
+     * @param evento actual corriendo
+     * Nota: este evento debe ser llamado despues de actualizado el Reloj en cada evento
+     */
+    void impresionEstadoActual();
 public:
 	Simulacion();
 	~Simulacion();
