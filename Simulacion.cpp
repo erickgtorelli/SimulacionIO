@@ -20,9 +20,11 @@ Simulacion::~Simulacion()
 }
 
 
-void Simulacion::run(int tiempo)
+void Simulacion::run(int tiempoReloj,int tiempoToken)
 {
-	while(Reloj < tiempo){
+    this->tiempoToken = tiempoToken;
+
+    while(Reloj < tiempoReloj){
 		if(!ManejadorDeEventos->colaVacia()){
 			EventoActual = ManejadorDeEventos->sacarSiguienteEvento();
 		}
@@ -43,11 +45,14 @@ void Simulacion::run(int tiempo)
 
 void Simulacion::evento_LlegaAComputadoraA(Evento* evento)
 {
+    Reloj = evento->reloj;
+
 	//Crear archivo y meterlo en la cola de archivos correspondiente
 	//---generar tipo y meterlo en la cola ---//
 
 	//Generar siguiente Arribo - exponencial
-	r += ((double) rand() / (RAND_MAX)); //valor aleatorio entre 0 y 1
+    double r;
+    r += ((double) rand() / (RAND_MAX)); //valor aleatorio entre 0 y 1
 	 
 	double x = -( (log (r) ) / 5) ; //x es una v.a. para la exponencial
 
@@ -59,10 +64,18 @@ void Simulacion::evento_LlegaAComputadoraA(Evento* evento)
 
 void Simulacion::evento_LlegaAComputadoraC(Evento* evento)
 {
-	//Crear archivo y meterlo en la cola de archivos correspondiente
-	//---generar tipo y meterlo en la cola ---//
+    Reloj = evento->reloj;
+
+    //Crear archivo y meterlo en la cola de archivos correspondiente
 
 	Archivos* archivo = new Archivos(generarTamanoDelArchivo());
+    if(generaPrioridad() == 1){
+        ComputadoraC.agregarArchivoTipo1(archivo);
+    }
+    else{
+        ComputadoraC.agregarArchivoTipo2(archivo);
+    }
+
 	//Generar siguiente Arribo
 	double z = 0;
 	double n = 0;
@@ -79,43 +92,46 @@ void Simulacion::evento_LlegaAComputadoraC(Evento* evento)
 	ManejadorDeEventos->agregarEventoAlaCola(evento);
 }
 
-void Simulacion::evento_LiberaTokenA(int ttoken){
+void Simulacion::evento_LiberaTokenA(Evento* evento){
 
-	//int t = tiempotoken; (el tiempo que el usuario le asigna al token, no se donde esta)
+    Reloj = evento->reloj;
+    int t = tiempoToken;
 	bool archivos = true;
-	
-	while (t != 0 && archivos) {
-		if (Computadora.Tipo1Vacia()){
-			if (Computadora.Tipo2Vacia()){
+    Archivos* archivo;
+
+    while (t > 0 && archivos) {
+        if (ComputadoraA.Tipo1Vacia()){
+            if (ComputadoraA.Tipo2Vacia()){
 				archivos = false;
 			}
 			else { //hay minimo 1 archivo de tipo 2
-				Computadora.sacarArchivoTipo2();
-				
-				t = t - Archivo.tamano() * 0.5;
-			
-				//termina de poner en linea				
+              archivo = ComputadoraA.sacarArchivoTipo2(t/0.5);
 				
 			}
 		} 
 		else { //hay minimo 1 archivo de tipo 1
-			Computadora.sacarArchivoTipo1();
-			
-			t = t - Archivo.tamano() * 0.5;
-			
-			//termina de poner en linea
+             archivo =  ComputadoraA.sacarArchivoTipo1(t/0.5);
 		}
-	
+
+       if(archivos){
+           //Actualiza tiempo y programa terminaDePonerEnLinea
+           t = t - archivo->tamano * 0.5;
+            Evento* terminaPonerLinea =
+                    new Evento(Reloj + (archivo->tamano * 0.5),TerminaDePonerEnLinea,archivo->tamano);
+            ManejadorDeEventos->agregarEventoAlaCola(terminaPonerLinea);
+        }
 	}
-	
-	//programar libera token B
+    //Se programa el siguiente libera token
+    Evento* liberaTokenB = new Evento(Reloj + tiempoToken-t,LiberaTokenB);
+    ManejadorDeEventos->agregarEventoAlaCola(liberaTokenB);
 	
 	delete EventoActual;
 
 }
 
-int Simulacion::generaPrioridad{
-	w = rand() % 100; //generación de número aleatorio entre 0-99
+int Simulacion::generaPrioridad(){
+    int w = rand() % 100;
+    //generación de número aleatorio entre 0-99
 	if (w < 24) { //tipo 1
 		return 1;
 	}

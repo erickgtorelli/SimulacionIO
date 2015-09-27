@@ -26,3 +26,9 @@
 *.exe
 *.out
 *.app
+
+*.pro
+*.pro.user
+
+CMakeLists.txt
+CMakeLists.txt.user
