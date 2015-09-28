@@ -46,7 +46,7 @@ void Simulacion::run(int tiempoReloj,int tiempoToken)
 void Simulacion::evento_LlegaAComputadoraA()
 {
     Reloj = EventoActual->reloj;
-
+    impresionEstadoActual();
 	//Crear archivo y meterlo en la cola de archivos correspondiente
 	//---generar tipo y meterlo en la cola ---//
 
@@ -59,6 +59,18 @@ void Simulacion::evento_LlegaAComputadoraA()
 	//Actualizo el siguiente arribo y lo vuelvo a encolar
     EventoActual->reloj = Reloj + x;
     ManejadorDeEventos->agregarEventoAlaCola(EventoActual);
+}
+
+void Simulacion::evento_TerminaDePonerEnLinea()
+{
+    Reloj = EventoActual->reloj;
+    impresionEstadoActual();
+    
+    Evento* llegaAServidor = new Evento(Reloj + 1,LlegaAServidorAntivirus,EventoActual->tamano);
+    ManejadorDeEventos->agregarEventoAlaCola(llegaAServidor);
+    
+    delete EventoActual;
+    
 }
 
 void Simulacion::impresionEstadoActual()
@@ -80,6 +92,7 @@ void Simulacion::impresionEstadoActual()
 void Simulacion::evento_LlegaAComputadoraC()
 {
     Reloj = EventoActual->reloj;
+    impresionEstadoActual();
     double z = 0;
     double n = 0;
     //Crear archivo y meterlo en la cola de archivos correspondiente
@@ -105,6 +118,7 @@ void Simulacion::evento_LlegaAComputadoraC()
 void Simulacion::evento_LiberaTokenA(){
 
     Reloj = EventoActual->reloj;
+    impresionEstadoActual();
     int t = tiempoToken;
 	bool archivos = true;
     Archivos* archivo;
