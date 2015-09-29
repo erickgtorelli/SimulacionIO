@@ -40,6 +40,18 @@ void Simulacion::run(int tiempoReloj,int tiempoToken)
     		case LlegaAComputadoraC:
                 evento_LlegaAComputadoraC();
     			break;
+        
+        case FinalizaRevisionDeVirus:
+              evento_FinalizaRevision(EventoActual->tamano);
+        break;
+        
+        case SeLiberaLineaRouter1:
+              evento_SeLiberaLinea1Router(EventoActual->tamano);
+        break;
+        
+        case SeLiberaLineaRouter2:
+              evento_SeLiberaLinea1Router(EventoActual->tamano);
+        break;
   		}
 	 }
 }
