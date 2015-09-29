@@ -34,6 +34,7 @@ void Simulacion::run(int tiempoReloj,int tiempoToken)
 			break;
 
 		case LlegaAComputadoraB:
+            evento_LlegaAComputadoraB();
 			break;
 
 		case LlegaAComputadoraC:
@@ -63,6 +64,30 @@ void Simulacion::evento_LlegaAComputadoraA()
 	double x = -( (log (r) ) / 5) ; //x es una v.a. para la exponencial
 
 	//Actualizo el siguiente arribo y lo vuelvo a encolar
+    EventoActual->reloj = Reloj + x;
+    ManejadorDeEventos->agregarEventoAlaCola(EventoActual);
+}
+
+void Simulacion::evento_LlegaAComputadoraB()
+{
+    Reloj = EventoActual->reloj;
+    impresionEstadoActual();
+
+    //Crear archivo y meterlo en la cola de archivos correspondiente
+    Archivos* archivo = new Archivos(generarTamanoDelArchivo());
+    if(generaPrioridad() == 1){
+        ComputadoraC.agregarArchivoTipo1(archivo);
+    }
+    else{
+        ComputadoraC.agregarArchivoTipo2(archivo);
+    }
+
+    //Generar siguiente Arribo
+    double r = ((double) rand() / (RAND_MAX)); //valor aleatorio entre 0 y 1
+     
+    double x = sqrt(80*(r+(4/5))) ; //x es una v.a.
+
+    //Actualizo el siguiente arribo y lo vuelvo a encolar
     EventoActual->reloj = Reloj + x;
     ManejadorDeEventos->agregarEventoAlaCola(EventoActual);
 }

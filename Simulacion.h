@@ -22,6 +22,7 @@ private:
     int generaPrioridad();
     void evento_LiberaTokenA();
     void evento_LlegaAComputadoraA();
+    void evento_LlegaAComputadoraB();
     void evento_TerminaDePonerEnLinea();
     void evento_LlegaAComputadoraC();
     /**
