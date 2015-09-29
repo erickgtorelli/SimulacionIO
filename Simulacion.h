@@ -21,8 +21,6 @@ private:
     bool Linea1_Disponible = true;
     bool Linea2_Disponible = true;
     std::list<Evento*>* ColaDeEnvios;           // La cola sigue el orden FIFO
-    bool agregarColaEnvios(Evento* event);
-    Evento* sacarColaEnvios();
 
     inline int generarTamanoDelArchivo(){return rand() % 64 + 1;}
     void evento_LiberaTokenA();
