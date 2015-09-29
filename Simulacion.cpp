@@ -271,4 +271,8 @@ int Simulacion::generaPrioridad(){
 	}
 }
 
+void Simulacion::evento_FinalizaRevision(){
+
+  
+}
 
