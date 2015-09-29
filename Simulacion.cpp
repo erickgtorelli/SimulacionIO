@@ -289,22 +289,61 @@ void Simulacion::evento_FinalizaRevision(int M){
     tiempo_revision += M/(8*i);
   }
 
-  /* Se encola para ser enviado */
+  /* Se crea un evento para enviar archivo
+   * Se encola el evento en la cola de envios
+   * Severifica que haya linea disponible
+   * Si hay linea disponible, se desencola evento
+   * Se programa el envio 
+   */
+  
   if( revisiones <= max_revisiones ){
-    /*Evento* encolarRouter = new Evento(Reloj + tiempo_revision, EnviarArchivo);
-    ManejadorDeEventos->agregarEventoAlaCola(encolarRouter);*/
+
+    Evento* paraEnviar = new Evento(Reloj + tiempo_revision, SeEncolaParaEnvio, EventoActual->tamano);
+    ColaDeEnvios->push_back(paraEnviar);
+
+    if (Linea1_Disponible && !ColaDeEnvios->empty() ){
+      paraEnviar = ColaDeEnvios->front();
+      ColaDeEnvios->pop_front();
+      paraEnviar->evento = SeLiberaLineaRouter1;
+
+      ManejadorDeEventos->agregarEventoAlaCola(paraEnviar);
+      Linea1_Disponible = false;
+    }
+    else if( Linea2_Disponible && !ColaDeEnvios->empty() ){
+      paraEnviar = ColaDeEnvios->front();
+      ColaDeEnvios->pop_front();
+      paraEnviar->evento = SeLiberaLineaRouter2;
+      
+      ManejadorDeEventos->agregarEventoAlaCola(paraEnviar);
+      Linea2_Disponible = false;
+    }
   }
 
   delete EventoActual;
 
 }
 
-void Simulacion::evento_SeLiberaLineaRouter(){
-
+void Simulacion::evento_SeLiberaLinea1Router(int M){
   Reloj = EventoActual->reloj;
   impresionEstadoActual();
 
-  bool enviado = false;
+  // Se mueve el reloj al tiempo que duro en enviarse el archivo
+  Reloj += M/64;
+  Linea1_Disponible = true;
+  impresionEstadoActual();
+  
+  delete EventoActual;
+
+}
+
+void Simulacion::evento_SeLiberaLinea2Router(int M){
+  Reloj = EventoActual->reloj;
+  impresionEstadoActual();
+
+  // Se mueve el reloj al tiempo que duro en enviarse el archivo
+  Reloj += M/64;
+  impresionEstadoActual();
+  Linea2_Disponible = true;
 
   delete EventoActual;
 

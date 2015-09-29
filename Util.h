@@ -12,7 +12,7 @@
 //Nombres respectivos de los eventos
 enum Nombre{LlegaAComputadoraA,LlegaAComputadoraB,LlegaAComputadoraC,LiberaTokenA,LiberaTokenB,LiberaTokenC,
            TerminaDePonerEnLinea,LlegaAServidorAntivirus,
-			FinalizaRevisionDeVirus,SeLiberaLineaRouter1,SeLiberaLineaRouter2};
+			FinalizaRevisionDeVirus,SeLiberaLineaRouter1,SeLiberaLineaRouter2,SeEncolaParaEnvio,};
 
 
 

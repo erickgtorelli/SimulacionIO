@@ -18,6 +18,12 @@ private:
 	Computadora ComputadoraB;
 	Computadora ComputadoraC;
 
+    bool Linea1_Disponible = true;
+    bool Linea2_Disponible = true;
+    std::list<Evento*>* ColaDeEnvios;           // La cola sigue el orden FIFO
+    bool agregarColaEnvios(Evento* event);
+    Evento* sacarColaEnvios();
+
     inline int generarTamanoDelArchivo(){return rand() % 64 + 1;}
     void evento_LiberaTokenA();
     void evento_LiberaTokenB();
@@ -28,7 +34,8 @@ private:
     void evento_LlegaAComputadoraC();
     void evento_TerminaDePonerEnLinea();
     void evento_FinalizaRevision(int M);
-    void evento_SeLiberaLineaRouter();
+    void evento_SeLiberaLinea1Router(int M);
+    void evento_SeLiberaLinea2Router(int M);
     /**
      * @brief impresionEstadoActual muestra informacion basica del estado de la simulacion
      * @param evento actual corriendo
