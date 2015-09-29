@@ -92,6 +92,157 @@ void Simulacion::evento_LlegaAComputadoraB()
     ManejadorDeEventos->agregarEventoAlaCola(EventoActual);
 }
 
+void Simulacion::evento_LlegaAComputadoraC()
+{
+    Reloj = EventoActual->reloj;
+    impresionEstadoActual();
+    double z = 0;
+    double n = 0;
+    //Crear archivo y meterlo en la cola de archivos correspondiente
+  Archivos* archivo = new Archivos(generarTamanoDelArchivo());
+    if(generaPrioridad() == 1){
+        ComputadoraC.agregarArchivoTipo1(archivo);
+    }
+    else{
+        ComputadoraC.agregarArchivoTipo2(archivo);
+    }
+  //Generar siguiente Arribo
+  //Generacion del Z
+  for(int i =0;i<12;i++)
+  n += ((double) rand() / (RAND_MAX));
+  z = n - 6;
+  //Calculamos el X
+  double x = 5 + 0.1*z;
+  //Actualizo el siguiente arribo y lo vuelvo a encolar
+    EventoActual->reloj = Reloj + x;
+    ManejadorDeEventos->agregarEventoAlaCola(EventoActual);
+}
+
+int Simulacion::generaPrioridad(){
+    int w = rand() % 100;
+    //generación de número aleatorio entre 0-99
+  if (w < 24) { //tipo 1
+    return 1;
+  }
+  else { //tipo 2
+    return 2;
+  }
+}
+
+void Simulacion::evento_LiberaTokenA(){
+
+    Reloj = EventoActual->reloj;
+    impresionEstadoActual();
+    int t = tiempoToken;
+  bool archivos = true;
+    Archivos* archivo;
+
+    while (t > 0 && archivos) {
+        if (ComputadoraA.Tipo1Vacia()){
+            if (ComputadoraA.Tipo2Vacia()){
+        archivos = false;
+      }
+      else { //hay minimo 1 archivo de tipo 2
+              archivo = ComputadoraA.sacarArchivoTipo2(t/0.5);
+        
+      }
+    } 
+    else { //hay minimo 1 archivo de tipo 1
+             archivo =  ComputadoraA.sacarArchivoTipo1(t/0.5);
+    }
+
+       if(archivos){
+           //Actualiza tiempo y programa terminaDePonerEnLinea
+           t = t - archivo->tamano * 0.5;
+            Evento* terminaPonerLinea =
+                    new Evento(Reloj + (archivo->tamano * 0.5),TerminaDePonerEnLinea,archivo->tamano);
+            ManejadorDeEventos->agregarEventoAlaCola(terminaPonerLinea);
+        }
+  }
+    //Se programa el siguiente libera token
+    Evento* liberaTokenB = new Evento(Reloj + tiempoToken-t,LiberaTokenB);
+    ManejadorDeEventos->agregarEventoAlaCola(liberaTokenB);
+  
+  delete EventoActual;
+
+}
+
+void Simulacion::evento_LiberaTokenB(){
+
+    Reloj = EventoActual->reloj;
+    impresionEstadoActual();
+    int t = tiempoToken;
+  bool archivos = true;
+    Archivos* archivo;
+
+    while (t > 0 && archivos) {
+        if (ComputadoraB.Tipo1Vacia()){
+            if (ComputadoraB.Tipo2Vacia()){
+        archivos = false;
+      }
+      else { //hay minimo 1 archivo de tipo 2
+              archivo = ComputadoraB.sacarArchivoTipo2(t/0.5);
+        
+      }
+    } 
+    else { //hay minimo 1 archivo de tipo 1
+             archivo =  ComputadoraB.sacarArchivoTipo1(t/0.5);
+    }
+
+       if(archivos){
+           //Actualiza tiempo y programa terminaDePonerEnLinea
+           t = t - archivo->tamano * 0.5;
+            Evento* terminaPonerLinea =
+                    new Evento(Reloj + (archivo->tamano * 0.5),TerminaDePonerEnLinea,archivo->tamano);
+            ManejadorDeEventos->agregarEventoAlaCola(terminaPonerLinea);
+        }
+  }
+    //Se programa el siguiente libera token
+    Evento* liberaTokenC = new Evento(Reloj + tiempoToken-t,LiberaTokenC);
+    ManejadorDeEventos->agregarEventoAlaCola(liberaTokenC);
+  
+  delete EventoActual;
+
+}
+
+void Simulacion::evento_LiberaTokenC(){
+
+    Reloj = EventoActual->reloj;
+    impresionEstadoActual();
+    int t = tiempoToken;
+  bool archivos = true;
+    Archivos* archivo;
+
+    while (t > 0 && archivos) {
+        if (ComputadoraC.Tipo1Vacia()){
+            if (ComputadoraC.Tipo2Vacia()){
+        archivos = false;
+      }
+      else { //hay minimo 1 archivo de tipo 2
+              archivo = ComputadoraC.sacarArchivoTipo2(t/0.5);
+        
+      }
+    } 
+    else { //hay minimo 1 archivo de tipo 1
+             archivo =  ComputadoraC.sacarArchivoTipo1(t/0.5);
+    }
+
+       if(archivos){
+           //Actualiza tiempo y programa terminaDePonerEnLinea
+           t = t - archivo->tamano * 0.5;
+            Evento* terminaPonerLinea =
+                    new Evento(Reloj + (archivo->tamano * 0.5),TerminaDePonerEnLinea,archivo->tamano);
+            ManejadorDeEventos->agregarEventoAlaCola(terminaPonerLinea);
+        }
+  }
+    //Se programa el siguiente libera token
+    Evento* liberaTokenA = new Evento(Reloj + tiempoToken-t,LiberaTokenA);
+    ManejadorDeEventos->agregarEventoAlaCola(liberaTokenA);
+  
+  delete EventoActual;
+
+}
+
 void Simulacion::evento_TerminaDePonerEnLinea()
 {
     Reloj = EventoActual->reloj;
@@ -102,6 +253,59 @@ void Simulacion::evento_TerminaDePonerEnLinea()
     
     delete EventoActual;
     
+}
+
+void Simulacion::evento_FinalizaRevision(){
+
+  Reloj = EventoActual->reloj;
+  impresionEstadoActual();
+
+  srand(time(NULL));          // Semilla para el random
+  bool tieneVirus = false;    // Dice si el archivo tiene virus o no
+  int revisiones = 0;         // Cantidad de veces que la revisión de virus dio positiva
+  int random = rand() % 100;  // Numero aleatorio que representa si tiene virus o no con respecto al rango de probabilidad
+  int  max = 4;               // Límite superior del intervalo [0,4] que representa la propabilidad de tener virus
+  int max_revisiones = 3;     // Maximo de revisiones antes de descartar el archivo
+  double tiempo_revision = 0; // Tiempo de revision del archivo en busca de virus
+  Archivos* archivo;
+  int M;
+
+  /* Por medio de variables aleatorias se calcula si el archivo tiene virus */
+  if(random <= max){
+    tieneVirus = true;
+    ++revisiones;
+  }
+
+  while( tieneVirus && revisiones <= max_revisiones ){
+    random = rand() % 100;
+    if(random > max){
+      tieneVirus = false;
+    }
+    else{
+      ++revisiones;
+    }
+  }
+
+  /* Averiguar cuanto dura la revision */
+  archivo = archivo.sacarArchivoTipo1();
+  if (!archivo){
+    archivo = archivo.sacarArchivoTipo2();
+  }
+
+  M = archivo->tamano;
+
+  for(int i = 1; i <= revisiones; ++i){
+    tiempo += M/(8*i)
+  }
+
+  /* Se encola para ser enviado */
+  if( revisiones > max_revisiones ){
+    std::cout << "ARCHIVO DESCARTADO!" << std::endl;
+  }
+  else{
+    std::cout << "ARCHIVO ENVIADO!" << std::endl;
+  }
+
 }
 
 void Simulacion::impresionEstadoActual()
@@ -118,161 +322,3 @@ void Simulacion::impresionEstadoActual()
            ComputadoraC.Tipo1Size(),
            ComputadoraC.Tipo2Size());
 }
-
-
-void Simulacion::evento_LlegaAComputadoraC()
-{
-    Reloj = EventoActual->reloj;
-    impresionEstadoActual();
-    double z = 0;
-    double n = 0;
-    //Crear archivo y meterlo en la cola de archivos correspondiente
-	Archivos* archivo = new Archivos(generarTamanoDelArchivo());
-    if(generaPrioridad() == 1){
-        ComputadoraC.agregarArchivoTipo1(archivo);
-    }
-    else{
-        ComputadoraC.agregarArchivoTipo2(archivo);
-    }
-	//Generar siguiente Arribo
-	//Generacion del Z
-	for(int i =0;i<12;i++)
-	n += ((double) rand() / (RAND_MAX));
-	z = n - 6;
-	//Calculamos el X
-	double x = 5 + 0.1*z;
-	//Actualizo el siguiente arribo y lo vuelvo a encolar
-    EventoActual->reloj = Reloj + x;
-    ManejadorDeEventos->agregarEventoAlaCola(EventoActual);
-}
-
-void Simulacion::evento_LiberaTokenA(){
-
-    Reloj = EventoActual->reloj;
-    impresionEstadoActual();
-    int t = tiempoToken;
-	bool archivos = true;
-    Archivos* archivo;
-
-    while (t > 0 && archivos) {
-        if (ComputadoraA.Tipo1Vacia()){
-            if (ComputadoraA.Tipo2Vacia()){
-				archivos = false;
-			}
-			else { //hay minimo 1 archivo de tipo 2
-              archivo = ComputadoraA.sacarArchivoTipo2(t/0.5);
-				
-			}
-		} 
-		else { //hay minimo 1 archivo de tipo 1
-             archivo =  ComputadoraA.sacarArchivoTipo1(t/0.5);
-		}
-
-       if(archivos){
-           //Actualiza tiempo y programa terminaDePonerEnLinea
-           t = t - archivo->tamano * 0.5;
-            Evento* terminaPonerLinea =
-                    new Evento(Reloj + (archivo->tamano * 0.5),TerminaDePonerEnLinea,archivo->tamano);
-            ManejadorDeEventos->agregarEventoAlaCola(terminaPonerLinea);
-        }
-	}
-    //Se programa el siguiente libera token
-    Evento* liberaTokenB = new Evento(Reloj + tiempoToken-t,LiberaTokenB);
-    ManejadorDeEventos->agregarEventoAlaCola(liberaTokenB);
-	
-	delete EventoActual;
-
-}
-
-void Simulacion::evento_LiberaTokenB(){
-
-    Reloj = EventoActual->reloj;
-    impresionEstadoActual();
-    int t = tiempoToken;
-	bool archivos = true;
-    Archivos* archivo;
-
-    while (t > 0 && archivos) {
-        if (ComputadoraB.Tipo1Vacia()){
-            if (ComputadoraB.Tipo2Vacia()){
-				archivos = false;
-			}
-			else { //hay minimo 1 archivo de tipo 2
-              archivo = ComputadoraB.sacarArchivoTipo2(t/0.5);
-				
-			}
-		} 
-		else { //hay minimo 1 archivo de tipo 1
-             archivo =  ComputadoraB.sacarArchivoTipo1(t/0.5);
-		}
-
-       if(archivos){
-           //Actualiza tiempo y programa terminaDePonerEnLinea
-           t = t - archivo->tamano * 0.5;
-            Evento* terminaPonerLinea =
-                    new Evento(Reloj + (archivo->tamano * 0.5),TerminaDePonerEnLinea,archivo->tamano);
-            ManejadorDeEventos->agregarEventoAlaCola(terminaPonerLinea);
-        }
-	}
-    //Se programa el siguiente libera token
-    Evento* liberaTokenC = new Evento(Reloj + tiempoToken-t,LiberaTokenC);
-    ManejadorDeEventos->agregarEventoAlaCola(liberaTokenC);
-	
-	delete EventoActual;
-
-}
-
-void Simulacion::evento_LiberaTokenC(){
-
-    Reloj = EventoActual->reloj;
-    impresionEstadoActual();
-    int t = tiempoToken;
-	bool archivos = true;
-    Archivos* archivo;
-
-    while (t > 0 && archivos) {
-        if (ComputadoraC.Tipo1Vacia()){
-            if (ComputadoraC.Tipo2Vacia()){
-				archivos = false;
-			}
-			else { //hay minimo 1 archivo de tipo 2
-              archivo = ComputadoraC.sacarArchivoTipo2(t/0.5);
-				
-			}
-		} 
-		else { //hay minimo 1 archivo de tipo 1
-             archivo =  ComputadoraC.sacarArchivoTipo1(t/0.5);
-		}
-
-       if(archivos){
-           //Actualiza tiempo y programa terminaDePonerEnLinea
-           t = t - archivo->tamano * 0.5;
-            Evento* terminaPonerLinea =
-                    new Evento(Reloj + (archivo->tamano * 0.5),TerminaDePonerEnLinea,archivo->tamano);
-            ManejadorDeEventos->agregarEventoAlaCola(terminaPonerLinea);
-        }
-	}
-    //Se programa el siguiente libera token
-    Evento* liberaTokenA = new Evento(Reloj + tiempoToken-t,LiberaTokenA);
-    ManejadorDeEventos->agregarEventoAlaCola(liberaTokenA);
-	
-	delete EventoActual;
-
-}
-
-int Simulacion::generaPrioridad(){
-    int w = rand() % 100;
-    //generación de número aleatorio entre 0-99
-	if (w < 24) { //tipo 1
-		return 1;
-	}
-	else { //tipo 2
-		return 2;
-	}
-}
-
-void Simulacion::evento_FinalizaRevision(){
-
-  
-}
-

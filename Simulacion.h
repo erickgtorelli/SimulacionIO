@@ -19,15 +19,14 @@ private:
 	Computadora ComputadoraC;
 
     inline int generarTamanoDelArchivo(){return rand() % 64 + 1;}
-    int generaPrioridad();
     void evento_LiberaTokenA();
     void evento_LiberaTokenB();
     void evento_LiberaTokenC();
+    int generaPrioridad();
     void evento_LlegaAComputadoraA();
     void evento_LlegaAComputadoraB();
-    void evento_TerminaDePonerEnLinea();
     void evento_LlegaAComputadoraC();
-
+    void evento_TerminaDePonerEnLinea();
     void evento_FinalizaRevision();      // Por ser agregado!!
     /**
      * @brief impresionEstadoActual muestra informacion basica del estado de la simulacion
