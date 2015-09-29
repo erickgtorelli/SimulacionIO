@@ -25,23 +25,23 @@ void Simulacion::run(int tiempoReloj,int tiempoToken)
     this->tiempoToken = tiempoToken;
 
     while(Reloj < tiempoReloj){
-		if(!ManejadorDeEventos->colaVacia()){
-			EventoActual = ManejadorDeEventos->sacarSiguienteEvento();
-		}
+  		if(!ManejadorDeEventos->colaVacia()){
+  			EventoActual = ManejadorDeEventos->sacarSiguienteEvento();
+  		}
 
-		switch(EventoActual->evento){
-		case LlegaAComputadoraA:
-			break;
+  		switch(EventoActual->evento){
+    		case LlegaAComputadoraA:
+    			break;
 
-		case LlegaAComputadoraB:
-            evento_LlegaAComputadoraB();
-			break;
+    		case LlegaAComputadoraB:
+                evento_LlegaAComputadoraB();
+    			break;
 
-		case LlegaAComputadoraC:
-            evento_LlegaAComputadoraC();
-			break;
-		}
-	}
+    		case LlegaAComputadoraC:
+                evento_LlegaAComputadoraC();
+    			break;
+  		}
+	 }
 }
 
 void Simulacion::evento_LlegaAComputadoraA()
@@ -255,7 +255,7 @@ void Simulacion::evento_TerminaDePonerEnLinea()
     
 }
 
-void Simulacion::evento_FinalizaRevision(){
+void Simulacion::evento_FinalizaRevision(int M){
 
   Reloj = EventoActual->reloj;
   impresionEstadoActual();
@@ -267,8 +267,6 @@ void Simulacion::evento_FinalizaRevision(){
   int  max = 4;               // Límite superior del intervalo [0,4] que representa la propabilidad de tener virus
   int max_revisiones = 3;     // Maximo de revisiones antes de descartar el archivo
   double tiempo_revision = 0; // Tiempo de revision del archivo en busca de virus
-  Archivos* archivo;
-  int M;
 
   /* Por medio de variables aleatorias se calcula si el archivo tiene virus */
   if(random <= max){
@@ -287,24 +285,28 @@ void Simulacion::evento_FinalizaRevision(){
   }
 
   /* Averiguar cuanto dura la revision */
-  archivo = archivo.sacarArchivoTipo1();
-  if (!archivo){
-    archivo = archivo.sacarArchivoTipo2();
-  }
-
-  M = archivo->tamano;
-
   for(int i = 1; i <= revisiones; ++i){
-    tiempo += M/(8*i)
+    tiempo_revision += M/(8*i);
   }
 
   /* Se encola para ser enviado */
-  if( revisiones > max_revisiones ){
-    std::cout << "ARCHIVO DESCARTADO!" << std::endl;
+  if( revisiones <= max_revisiones ){
+    /*Evento* encolarRouter = new Evento(Reloj + tiempo_revision, EnviarArchivo);
+    ManejadorDeEventos->agregarEventoAlaCola(encolarRouter);*/
   }
-  else{
-    std::cout << "ARCHIVO ENVIADO!" << std::endl;
-  }
+
+  delete EventoActual;
+
+}
+
+void Simulacion::evento_SeLiberaLineaRouter(){
+
+  Reloj = EventoActual->reloj;
+  impresionEstadoActual();
+
+  bool enviado = false;
+
+  delete EventoActual;
 
 }
 

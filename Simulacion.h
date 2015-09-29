@@ -27,7 +27,8 @@ private:
     void evento_LlegaAComputadoraB();
     void evento_LlegaAComputadoraC();
     void evento_TerminaDePonerEnLinea();
-    void evento_FinalizaRevision();      // Por ser agregado!!
+    void evento_FinalizaRevision(int M);
+    void evento_SeLiberaLineaRouter();
     /**
      * @brief impresionEstadoActual muestra informacion basica del estado de la simulacion
      * @param evento actual corriendo
