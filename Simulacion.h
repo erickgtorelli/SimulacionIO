@@ -34,6 +34,7 @@ private:
     void evento_FinalizaRevision(int M);
     void evento_SeLiberaLinea1Router(int M);
     void evento_SeLiberaLinea2Router(int M);
+    void evento_LlegaAServidorAntivirus();
     /**
      * @brief impresionEstadoActual muestra informacion basica del estado de la simulacion
      * @param evento actual corriendo

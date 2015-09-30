@@ -1,6 +1,6 @@
 #include "Simulacion.h"
 #include "math.h"
-
+#include <unistd.h>
 Simulacion::Simulacion()
 {
 	Reloj = 0;
@@ -11,7 +11,13 @@ Simulacion::Simulacion()
 
 	//Iniciarlizar primeros eventos para correr la simulacion
 	Evento* LlegaAC = new Evento(0,LlegaAComputadoraC);
-	ManejadorDeEventos->agregarEventoAlaCola(LlegaAC);
+    Evento* LlegaAB = new Evento(0,LlegaAComputadoraB);
+    Evento* LlegaAA = new Evento(0,LlegaAComputadoraA);
+    Evento* LiberaToken = new Evento(0,LiberaTokenA);
+    ManejadorDeEventos->agregarEventoAlaCola(LlegaAC);
+    ManejadorDeEventos->agregarEventoAlaCola(LlegaAB);
+    ManejadorDeEventos->agregarEventoAlaCola(LlegaAA);
+    ManejadorDeEventos->agregarEventoAlaCola(LiberaToken);
 }
 
 Simulacion::~Simulacion()
@@ -27,12 +33,12 @@ void Simulacion::run(int tiempoReloj,int tiempoToken)
     while(Reloj < tiempoReloj){
   		if(!ManejadorDeEventos->colaVacia()){
   			EventoActual = ManejadorDeEventos->sacarSiguienteEvento();
-  		}
 
+        //sleep(1);
   		switch(EventoActual->evento){
     		case LlegaAComputadoraA:
-    			break;
-
+                evento_LlegaAComputadoraA();
+                break;
     		case LlegaAComputadoraB:
                 evento_LlegaAComputadoraB();
     			break;
@@ -40,20 +46,36 @@ void Simulacion::run(int tiempoReloj,int tiempoToken)
     		case LlegaAComputadoraC:
                 evento_LlegaAComputadoraC();
     			break;
-        
-        case FinalizaRevisionDeVirus:
-              evento_FinalizaRevision(EventoActual->tamano);
-        break;
-        
-        case SeLiberaLineaRouter1:
-              evento_SeLiberaLinea1Router(EventoActual->tamano);
-        break;
-        
-        case SeLiberaLineaRouter2:
-              evento_SeLiberaLinea1Router(EventoActual->tamano);
-        break;
+            case LiberaTokenA:
+                evento_LiberaTokenA();
+                break;
+            case LiberaTokenB:
+                evento_LiberaTokenB();
+                break;
+            case LiberaTokenC:
+                evento_LiberaTokenC();
+                break;
+            case TerminaDePonerEnLinea:
+                evento_TerminaDePonerEnLinea();
+                break;
+            case LlegaAServidorAntivirus:
+                  evento_LlegaAServidorAntivirus();
+                break;
+            case FinalizaRevisionDeVirus:
+                  evento_FinalizaRevision(EventoActual->tamano);
+                break;
+
+            case SeLiberaLineaRouter1:
+                  evento_SeLiberaLinea1Router(EventoActual->tamano);
+                break;
+
+            case SeLiberaLineaRouter2:
+                  evento_SeLiberaLinea1Router(EventoActual->tamano);
+                break;
   		}
 	 }
+    }
+    printf("Simulacion Termino!");
 }
 
 void Simulacion::evento_LlegaAComputadoraA()
@@ -71,9 +93,9 @@ void Simulacion::evento_LlegaAComputadoraA()
 
 	//Generar siguiente Arribo - exponencial
     double r;
-    r += ((double) rand() / (RAND_MAX)); //valor aleatorio entre 0 y 1
+    r = ((double) rand() / (RAND_MAX)); //valor aleatorio entre 0 y 1
 	 
-	double x = -( (log (r) ) / 5) ; //x es una v.a. para la exponencial
+    double x = -( (log (r) ) / 5) ; //x es una v.a. para la exponencial
 
 	//Actualizo el siguiente arribo y lo vuelvo a encolar
     EventoActual->reloj = Reloj + x;
@@ -373,6 +395,16 @@ void Simulacion::evento_SeLiberaLinea2Router(int M){
 
   delete EventoActual;
 
+}
+
+void Simulacion::evento_LlegaAServidorAntivirus()
+{
+    Reloj = EventoActual->reloj;
+    impresionEstadoActual();
+
+    Evento* Finaliza = new Evento(Reloj,FinalizaRevisionDeVirus,EventoActual->tamano);
+    ManejadorDeEventos->agregarEventoAlaCola(Finaliza);
+    delete EventoActual;
 }
 
 void Simulacion::impresionEstadoActual()

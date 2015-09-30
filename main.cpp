@@ -8,7 +8,7 @@
 #include <cstdlib>
 #include "Util.h"
 #include <iostream>
-
+#include "Simulacion.h"
 using namespace std;
 
 /*
@@ -20,7 +20,7 @@ int main(int argc, char** argv) {
 	int tiempoToken;
 	int numeroDeVeces;
 	int modoLento = 0;
-
+    Simulacion* Sim = new Simulacion();
     printf("¿Cuantas veces quiere correr la simulación? \n");
 	scanf("%d",&numeroDeVeces);
     printf("¿Cuanto tiempo desea por simulación? \n");
@@ -29,7 +29,7 @@ int main(int argc, char** argv) {
 	scanf("%d",&tiempoToken);
     printf("¿Desea activar el modo lento? 1 para Si \n");
 	scanf("%d",&modoLento);
-
+    Sim->run(300,5);
 
 
     return 0;
