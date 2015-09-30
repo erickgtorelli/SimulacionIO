@@ -338,11 +338,18 @@ void Simulacion::evento_FinalizaRevision(int M){
 void Simulacion::evento_SeLiberaLinea1Router(int M){
   Reloj = EventoActual->reloj;
   impresionEstadoActual();
-
-  // Se mueve el reloj al tiempo que duro en enviarse el archivo
-  Reloj += M/64;
-  Linea1_Disponible = true;
-  impresionEstadoActual();
+  
+  if( !ColaDeEnvios->empty() ){
+    Evento* paraEnviar = ColaDeEnvios->front();
+    ColaDeEnvios->pop_front();
+    paraEnviar->evento = SeLiberaLineaRouter1;
+    paraEnviar->reloj += M/64;
+    ManejadorDeEventos->agregarEventoAlaCola(paraEnviar);
+    Linea1_Disponible = false;
+  }
+  else{
+    Linea1_Disponible = true;
+  }
   
   delete EventoActual;
 
@@ -352,10 +359,17 @@ void Simulacion::evento_SeLiberaLinea2Router(int M){
   Reloj = EventoActual->reloj;
   impresionEstadoActual();
 
-  // Se mueve el reloj al tiempo que duro en enviarse el archivo
-  Reloj += M/64;
-  impresionEstadoActual();
-  Linea2_Disponible = true;
+  if( !ColaDeEnvios->empty() ){
+    Evento* paraEnviar = ColaDeEnvios->front();
+    ColaDeEnvios->pop_front();
+    paraEnviar->evento = SeLiberaLineaRouter2;
+    paraEnviar->reloj += M/64;
+    ManejadorDeEventos->agregarEventoAlaCola(paraEnviar);
+    Linea2_Disponible = false;
+  }
+  else{
+    Linea2_Disponible = true;
+  }
 
   delete EventoActual;
 
