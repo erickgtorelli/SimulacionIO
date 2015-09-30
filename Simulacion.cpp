@@ -8,6 +8,9 @@ Simulacion::Simulacion()
 	//Cambiar valor al default para el switch despues
 	EventoActual = 0;
 	ManejadorDeEventos = new Util();
+	ComputadoraA = new Computadora();
+	ComputadoraB = new Computadora();
+	ComputadoraC = new Computadora();
 
 	//Iniciarlizar primeros eventos para correr la simulacion
 	Evento* LlegaAC = new Evento(0,LlegaAComputadoraC);
@@ -34,9 +37,9 @@ void Simulacion::run(int tiempoReloj,int tiempoToken)
   		if(!ManejadorDeEventos->colaVacia()){
   			EventoActual = ManejadorDeEventos->sacarSiguienteEvento();
 
-        //sleep(1);
+		sleep(1);
   		switch(EventoActual->evento){
-    		case LlegaAComputadoraA:
+			case LlegaAComputadoraA:
                 evento_LlegaAComputadoraA();
                 break;
     		case LlegaAComputadoraB:
@@ -85,10 +88,10 @@ void Simulacion::evento_LlegaAComputadoraA()
 	//Crear archivo y meterlo en la cola de archivos correspondiente
 	Archivos* archivo = new Archivos(generarTamanoDelArchivo());
     if(generaPrioridad() == 1){
-        ComputadoraA.agregarArchivoTipo1(archivo);
+		ComputadoraA->agregarArchivoTipo1(archivo);
     }
     else{
-        ComputadoraA.agregarArchivoTipo2(archivo);
+		ComputadoraA->agregarArchivoTipo2(archivo);
     }
 
 	//Generar siguiente Arribo - exponencial
@@ -110,10 +113,10 @@ void Simulacion::evento_LlegaAComputadoraB()
     //Crear archivo y meterlo en la cola de archivos correspondiente
     Archivos* archivo = new Archivos(generarTamanoDelArchivo());
     if(generaPrioridad() == 1){
-        ComputadoraC.agregarArchivoTipo1(archivo);
+		ComputadoraB->agregarArchivoTipo1(archivo);
     }
     else{
-        ComputadoraC.agregarArchivoTipo2(archivo);
+		ComputadoraB->agregarArchivoTipo2(archivo);
     }
 
     //Generar siguiente Arribo
@@ -135,10 +138,10 @@ void Simulacion::evento_LlegaAComputadoraC()
     //Crear archivo y meterlo en la cola de archivos correspondiente
   Archivos* archivo = new Archivos(generarTamanoDelArchivo());
     if(generaPrioridad() == 1){
-        ComputadoraC.agregarArchivoTipo1(archivo);
+		ComputadoraC->agregarArchivoTipo1(archivo);
     }
     else{
-        ComputadoraC.agregarArchivoTipo2(archivo);
+		ComputadoraC->agregarArchivoTipo2(archivo);
     }
   //Generar siguiente Arribo
   //Generacion del Z
@@ -168,21 +171,21 @@ void Simulacion::evento_LiberaTokenA(){
     Reloj = EventoActual->reloj;
     impresionEstadoActual();
     int t = tiempoToken;
-  bool archivos = true;
+	bool archivos = true;
     Archivos* archivo;
 
     while (t > 0 && archivos) {
-        if (ComputadoraA.Tipo1Vacia()){
-            if (ComputadoraA.Tipo2Vacia()){
+		if (ComputadoraA->Tipo1Vacia()){
+			if (ComputadoraA->Tipo2Vacia()){
         archivos = false;
       }
       else { //hay minimo 1 archivo de tipo 2
-              archivo = ComputadoraA.sacarArchivoTipo2(t/0.5);
+			  archivo = ComputadoraA->sacarArchivoTipo2(t/0.5);
         
       }
     } 
     else { //hay minimo 1 archivo de tipo 1
-             archivo =  ComputadoraA.sacarArchivoTipo1(t/0.5);
+			 archivo =  ComputadoraA->sacarArchivoTipo1(t/0.5);
     }
 
        if(archivos){
@@ -210,17 +213,17 @@ void Simulacion::evento_LiberaTokenB(){
     Archivos* archivo;
 
     while (t > 0 && archivos) {
-        if (ComputadoraB.Tipo1Vacia()){
-            if (ComputadoraB.Tipo2Vacia()){
+		if (ComputadoraB->Tipo1Vacia()){
+			if (ComputadoraB->Tipo2Vacia()){
         archivos = false;
       }
       else { //hay minimo 1 archivo de tipo 2
-              archivo = ComputadoraB.sacarArchivoTipo2(t/0.5);
+			  archivo = ComputadoraB->sacarArchivoTipo2(t/0.5);
         
       }
     } 
     else { //hay minimo 1 archivo de tipo 1
-             archivo =  ComputadoraB.sacarArchivoTipo1(t/0.5);
+			 archivo =  ComputadoraB->sacarArchivoTipo1(t/0.5);
     }
 
        if(archivos){
@@ -248,17 +251,17 @@ void Simulacion::evento_LiberaTokenC(){
     Archivos* archivo;
 
     while (t > 0 && archivos) {
-        if (ComputadoraC.Tipo1Vacia()){
-            if (ComputadoraC.Tipo2Vacia()){
+		if (ComputadoraC->Tipo1Vacia()){
+			if (ComputadoraC->Tipo2Vacia()){
         archivos = false;
       }
       else { //hay minimo 1 archivo de tipo 2
-              archivo = ComputadoraC.sacarArchivoTipo2(t/0.5);
+			  archivo = ComputadoraC->sacarArchivoTipo2(t/0.5);
         
       }
     } 
     else { //hay minimo 1 archivo de tipo 1
-             archivo =  ComputadoraC.sacarArchivoTipo1(t/0.5);
+			 archivo =  ComputadoraC->sacarArchivoTipo1(t/0.5);
     }
 
        if(archivos){
@@ -412,12 +415,12 @@ void Simulacion::impresionEstadoActual()
     printf("Reloj: %f \n",Reloj);
     printf("Evento actual: %d \n",EventoActual->evento);
     printf("Cola 1 Computadora A: %d \n Cola 2 Computadora A: %d \n",
-           ComputadoraA.Tipo1Size(),
-           ComputadoraA.Tipo2Size());
+		   ComputadoraA->Tipo1Size(),
+		   ComputadoraA->Tipo2Size());
     printf("Cola 1 Computadora B: %d \n Cola 2 Computadora B: %d \n",
-           ComputadoraB.Tipo1Size(),
-           ComputadoraB.Tipo2Size());
+		   ComputadoraB->Tipo1Size(),
+		   ComputadoraB->Tipo2Size());
     printf("Cola 1 Computadora C: %d \n Cola 2 Computadora C: %d \n",
-           ComputadoraC.Tipo1Size(),
-           ComputadoraC.Tipo2Size());
+		   ComputadoraC->Tipo1Size(),
+		   ComputadoraC->Tipo2Size());
 }

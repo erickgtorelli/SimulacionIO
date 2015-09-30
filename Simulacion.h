@@ -14,9 +14,9 @@ private:
     int tiempoToken;
 	Evento* EventoActual;
 	Util* ManejadorDeEventos;
-	Computadora ComputadoraA;
-	Computadora ComputadoraB;
-	Computadora ComputadoraC;
+	Computadora* ComputadoraA;
+	Computadora* ComputadoraB;
+	Computadora* ComputadoraC;
 
     bool Linea1_Disponible = true;
     bool Linea2_Disponible = true;
