@@ -29,7 +29,7 @@ int main(int argc, char** argv) {
 	scanf("%d",&tiempoToken);
     printf("¿Desea activar el modo lento? 1 para Si \n");
 	scanf("%d",&modoLento);
-	Sim->run(300,10);
+	Sim->run(200,10);
 
 
     return 0;

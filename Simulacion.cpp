@@ -11,7 +11,7 @@ Simulacion::Simulacion()
 	ComputadoraA = new Computadora();
 	ComputadoraB = new Computadora();
 	ComputadoraC = new Computadora();
-
+        ColaDeEnvios = new std::list<Evento*>;
 	//Iniciarlizar primeros eventos para correr la simulacion
 	Evento* LlegaAC = new Evento(0,LlegaAComputadoraC);
     Evento* LlegaAB = new Evento(0,LlegaAComputadoraB);
@@ -358,7 +358,7 @@ void Simulacion::evento_FinalizaRevision(int M){
    * Si hay linea disponible, se desencola evento
    * Se programa el envio 
    */
-  
+ 
   if( revisiones <= max_revisiones ){
 
     Evento* paraEnviar = new Evento(Reloj + tiempo_revision, SeEncolaParaEnvio, M);
