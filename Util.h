@@ -10,7 +10,7 @@
 #include <list>
 
 //Nombres respectivos de los eventos
-enum Nombre{LlegaAComputadoraA,LlegaAComputadoraB,LlegaAComputadoraC,LiberaTokenA,LiberaTokenB,LiberaTokenC,
+enum Nombre{LlegaAComputadoraA=0,LlegaAComputadoraB,LlegaAComputadoraC,LiberaTokenA,LiberaTokenB,LiberaTokenC,
            TerminaDePonerEnLinea,LlegaAServidorAntivirus,
 			FinalizaRevisionDeVirus,SeLiberaLineaRouter1,SeLiberaLineaRouter2,SeEncolaParaEnvio,};
 

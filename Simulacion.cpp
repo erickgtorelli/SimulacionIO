@@ -14,13 +14,13 @@ Simulacion::Simulacion()
 
 	//Iniciarlizar primeros eventos para correr la simulacion
 	Evento* LlegaAC = new Evento(0,LlegaAComputadoraC);
-    Evento* LlegaAB = new Evento(0,LlegaAComputadoraB);
-    Evento* LlegaAA = new Evento(0,LlegaAComputadoraA);
+  Evento* LlegaAB = new Evento(0,LlegaAComputadoraB);
+  Evento* LlegaAA = new Evento(0,LlegaAComputadoraA);
 	Evento* LiberaToken = new Evento(10,LiberaTokenA);
-    ManejadorDeEventos->agregarEventoAlaCola(LlegaAC);
-    ManejadorDeEventos->agregarEventoAlaCola(LlegaAB);
-    ManejadorDeEventos->agregarEventoAlaCola(LlegaAA);
-    ManejadorDeEventos->agregarEventoAlaCola(LiberaToken);
+  ManejadorDeEventos->agregarEventoAlaCola(LlegaAC);
+  ManejadorDeEventos->agregarEventoAlaCola(LlegaAB);
+  ManejadorDeEventos->agregarEventoAlaCola(LlegaAA);
+  ManejadorDeEventos->agregarEventoAlaCola(LiberaToken);
 }
 
 Simulacion::~Simulacion()
