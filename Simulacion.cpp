@@ -381,10 +381,9 @@ void Simulacion::evento_FinalizaRevision(int M){
     }
   }
 
-  /* Averiguar cuanto dura la revision */
-  for(int i = 1; i <= revisiones; ++i){
-    tiempo_revision += M/(8*i);
-  }
+  ++totalArchivosRevisados;
+  acumuladoRevisionesVirus += revisiones;
+  primedioRevisionesVirus = acumuladoRevisionesVirus / totalArchivosRevisados;
 
   /* Se crea un evento para enviar archivo
    * Se encola el evento en la cola de envios
@@ -395,8 +394,14 @@ void Simulacion::evento_FinalizaRevision(int M){
  
   if( revisiones <= max_revisiones ){
 
+    /* Averiguar cuanto dura la revision */
+    for(int i = 1; i <= revisiones; ++i){
+      tiempo_revision += M/(8*i);
+    }
+
 	Evento* paraEnviar = new Evento(Reloj + tiempo_revision, SeEncolaParaEnvio, M,EventoActual->tipoArchivo,
 									EventoActual->entradaAlSistema);
+
     ColaDeEnvios->push_back(paraEnviar);
     PrimedioColaEnvios();
 
@@ -511,6 +516,7 @@ void Simulacion::impresionEstadoActual()
 {
     printf("Reloj: %f \n",Reloj);
 	//printf("Evento actual: %d \n",EventoActual->evento);
+    printf("Tiempo T del token: %d \n", tiempoToken);
     printf("Cola 1 Computadora A: %d \n Cola 2 Computadora A: %d \n",
 		   ComputadoraA->Tipo1Size(),
 		   ComputadoraA->Tipo2Size());
@@ -539,4 +545,5 @@ void Simulacion::impresionTerminoSimulacion()
 	printf("Tiempo promedio de los archivos en el sistema en general: %f \n",tiempoArchivos / NumeroDeArchivos);
 	printf("Tiempo promedio en el sistema de los archivos tipo 1: %f \n",tiempoArchivos1/NumeroDeArchivos1);
 	printf("Tiempo promedio en el sistema de los archivos tipo 2: %f \n",tiempoArchivos2/NumeroDeArchivos2);
+  printf("Número promedio de revisiones del antivirus por archivo: %d \n", primedioRevisionesVirus);
 }
