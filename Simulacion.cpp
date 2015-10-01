@@ -5,7 +5,9 @@ Simulacion::Simulacion()
 {
 	Reloj = 0;
 	srand (time(NULL));
-
+	NumeroDeArchivos = 0;
+	NumeroDeArchivos1 = 0;
+	NumeroDeArchivos2 = 0;
 	//Cambiar valor al default para el switch despues
 	EventoActual = 0;
 	ManejadorDeEventos = new Util();
@@ -51,7 +53,6 @@ void Simulacion::run(int tiempoReloj, int tiempoToken, int modoLento)
     		case LlegaAComputadoraB:
                 evento_LlegaAComputadoraB();
     			break;
-
     		case LlegaAComputadoraC:
                 evento_LlegaAComputadoraC();
     			break;
@@ -73,11 +74,9 @@ void Simulacion::run(int tiempoReloj, int tiempoToken, int modoLento)
             case FinalizaRevisionDeVirus:
                   evento_FinalizaRevision(EventoActual->tamano);
                 break;
-
             case SeLiberaLineaRouter1:
                   evento_SeLiberaLinea1Router(EventoActual->tamano);
                 break;
-
             case SeLiberaLineaRouter2:
                   evento_SeLiberaLinea1Router(EventoActual->tamano);
                 break;
@@ -85,9 +84,7 @@ void Simulacion::run(int tiempoReloj, int tiempoToken, int modoLento)
 	 }
     }
     
-    printf("Simulacion Termino! \n");
-    printf("Tamano promedio de la cola de envios: %d \n", tamPromedioColaEnvios);
-    printf("Número promedio de revisiones del antivirus por archivo: %d \n", primedioRevisionesVirus);
+   impresionTerminoSimulacion();
 }
 
 void Simulacion::evento_LlegaAComputadoraA()
@@ -96,7 +93,7 @@ void Simulacion::evento_LlegaAComputadoraA()
 	printf("Evento: LlegaAComputadoraA \n");
     impresionEstadoActual();
 	//Crear archivo y meterlo en la cola de archivos correspondiente
-	Archivos* archivo = new Archivos(generarTamanoDelArchivo());
+	Archivos* archivo = new Archivos(generarTamanoDelArchivo(),Reloj);
     if(generaPrioridad() == 1){
 		ComputadoraA->agregarArchivoTipo1(archivo);
     }
@@ -122,7 +119,7 @@ void Simulacion::evento_LlegaAComputadoraB()
     impresionEstadoActual();
 
     //Crear archivo y meterlo en la cola de archivos correspondiente
-    Archivos* archivo = new Archivos(generarTamanoDelArchivo());
+	Archivos* archivo = new Archivos(generarTamanoDelArchivo(),Reloj);
     if(generaPrioridad() == 1){
 		ComputadoraB->agregarArchivoTipo1(archivo);
     }
@@ -147,7 +144,7 @@ void Simulacion::evento_LlegaAComputadoraC()
     double z = 0;
     double n = 0;
     //Crear archivo y meterlo en la cola de archivos correspondiente
-  Archivos* archivo = new Archivos(generarTamanoDelArchivo());
+  Archivos* archivo = new Archivos(generarTamanoDelArchivo(),Reloj);
     if(generaPrioridad() == 1){
 		ComputadoraC->agregarArchivoTipo1(archivo);
     }
@@ -185,7 +182,7 @@ void Simulacion::evento_LiberaTokenA(){
     tieneElToken++;
 	bool archivos = true;
     Archivos* archivo;
-	
+	int tipo = 0;
     while (t > 0 && archivos) {
 
     if (ComputadoraA->Tipo1Vacia()){
@@ -196,25 +193,26 @@ void Simulacion::evento_LiberaTokenA(){
 				
 			  				archivo = ComputadoraA->sacarArchivoTipo2(t/0.5);
 			  				archivosEnviados++;
-
+							tipo = 2;
                         }
     } 
     else { //hay minimo 1 archivo de tipo 1
 			
 			 archivo =  ComputadoraA->sacarArchivoTipo1(t/0.5);
 			 archivosEnviados++;
+			 tipo = 1;
 			 if(archivo == nullptr && !ComputadoraA->Tipo2Vacia()){
 				 archivo = ComputadoraA->sacarArchivoTipo2(t/0.5);
+				tipo = 2;
 			 }
     }
-       
        if(archivos && archivo != nullptr){
            int tamano = archivo->tamano;
            //Actualiza tiempo y programa terminaDePonerEnLinea
-
+		   double entrada = archivo->entradaAlSistema;
             t = t - tamano  * 0.5;
             Evento* terminaPonerLinea =
-                    new Evento(Reloj + (tamano * 0.5),TerminaDePonerEnLinea,tamano);
+					new Evento(Reloj + (tamano * 0.5),TerminaDePonerEnLinea,tamano,tipo,entrada);
             ManejadorDeEventos->agregarEventoAlaCola(terminaPonerLinea);
             delete archivo;
             archivo = nullptr;
@@ -241,7 +239,7 @@ void Simulacion::evento_LiberaTokenB(){
     tieneElToken++;
   bool archivos = true;
     Archivos* archivo;
-
+	int tipo = 0;
     while (t > 0 && archivos) {
 		if (ComputadoraB->Tipo1Vacia()){
 			if (ComputadoraB->Tipo2Vacia()){
@@ -250,30 +248,32 @@ void Simulacion::evento_LiberaTokenB(){
       else { //hay minimo 1 archivo de tipo 2
 			  archivo = ComputadoraB->sacarArchivoTipo2(t/0.5);
 			  archivosEnviados++;
-        
+			  tipo = 2;
       }
     } 
     else { //hay minimo 1 archivo de tipo 1
 			 archivo =  ComputadoraB->sacarArchivoTipo1(t/0.5);
 			 archivosEnviados++;
+			 tipo = 1;
 			 if(archivo == nullptr && !ComputadoraA->Tipo2Vacia()){
 				 archivo = ComputadoraA->sacarArchivoTipo2(t/0.5);
+				tipo = 2;
 			 }
     }
 
         if(archivos && archivo != nullptr){
            int tamano = archivo->tamano;
            //Actualiza tiempo y programa terminaDePonerEnLinea
-		   
+		   int entrada = archivo->entradaAlSistema;
             t = t - tamano  * 0.5;
             Evento* terminaPonerLinea =
-                    new Evento(Reloj + (tamano * 0.5),TerminaDePonerEnLinea,tamano);
+					new Evento(Reloj + (tamano * 0.5),TerminaDePonerEnLinea,tamano,tipo,entrada);
             ManejadorDeEventos->agregarEventoAlaCola(terminaPonerLinea);
             delete archivo;
             archivo = nullptr;
        }
        else{
-           archivos = false;
+		   archivos = false;
        }
   }
     //Se programa el siguiente libera token
@@ -292,7 +292,7 @@ void Simulacion::evento_LiberaTokenC(){
     tieneElToken++;
   bool archivos = true;
     Archivos* archivo;
-
+	int tipo = 0;
     while (t > 0 && archivos) {
 		if (ComputadoraC->Tipo1Vacia()){
 			if (ComputadoraC->Tipo2Vacia()){
@@ -301,24 +301,27 @@ void Simulacion::evento_LiberaTokenC(){
       else { //hay minimo 1 archivo de tipo 2
 			  archivo = ComputadoraC->sacarArchivoTipo2(t/0.5);
 			  archivosEnviados++;
+			  tipo = 2;
         
       }
     } 
     else { //hay minimo 1 archivo de tipo 1
 			 archivo =  ComputadoraC->sacarArchivoTipo1(t/0.5);
 			 archivosEnviados++;
+			 tipo = 1;
 			 if(archivo == nullptr && !ComputadoraA->Tipo2Vacia()){
 				 archivo = ComputadoraA->sacarArchivoTipo2(t/0.5);
+				tipo = 2;
 			 }
     }
 
        if(archivos && archivo != nullptr){
            int tamano = archivo->tamano;
            //Actualiza tiempo y programa terminaDePonerEnLinea
-		  
+			int entrada = archivo->entradaAlSistema;
             t = t - tamano  * 0.5;
             Evento* terminaPonerLinea =
-                    new Evento(Reloj + (tamano * 0.5),TerminaDePonerEnLinea,tamano);
+					new Evento(Reloj + (tamano * 0.5),TerminaDePonerEnLinea,tamano,tipo,entrada);
             ManejadorDeEventos->agregarEventoAlaCola(terminaPonerLinea);
             delete archivo;
             archivo = nullptr;
@@ -341,7 +344,8 @@ void Simulacion::evento_TerminaDePonerEnLinea()
 	printf("Evento: TerminaDePonerEnLinea \n");
 	impresionEstadoActual();
 
-    Evento* llegaAServidor = new Evento(Reloj + 1,LlegaAServidorAntivirus,EventoActual->tamano);
+	Evento* llegaAServidor = new Evento(Reloj + 1,LlegaAServidorAntivirus,EventoActual->tamano,EventoActual->tipoArchivo,
+										EventoActual->entradaAlSistema);
     ManejadorDeEventos->agregarEventoAlaCola(llegaAServidor);
     
     delete EventoActual;
@@ -395,7 +399,9 @@ void Simulacion::evento_FinalizaRevision(int M){
       tiempo_revision += M/(8*i);
     }
 
-    Evento* paraEnviar = new Evento(Reloj + tiempo_revision, SeEncolaParaEnvio, M);
+	Evento* paraEnviar = new Evento(Reloj + tiempo_revision, SeEncolaParaEnvio, M,EventoActual->tipoArchivo,
+									EventoActual->entradaAlSistema);
+
     ColaDeEnvios->push_back(paraEnviar);
     PrimedioColaEnvios();
 
@@ -427,6 +433,17 @@ void Simulacion::evento_SeLiberaLinea1Router(int M){
 	printf("Evento: SeLiberaLineaRouter1 \n");
   Reloj = EventoActual->reloj;
   impresionEstadoActual();
+  tiempoArchivos = Reloj - EventoActual->entradaAlSistema;
+  NumeroDeArchivos++;
+	if(EventoActual->tipoArchivo == 1){
+		NumeroDeArchivos1++;
+		tiempoArchivos1 = Reloj - EventoActual->entradaAlSistema;
+	}
+	else{
+		NumeroDeArchivos2++;
+		tiempoArchivos2 = Reloj - EventoActual->entradaAlSistema;
+
+	}
   if( !ColaDeEnvios->empty() ){
     Evento* paraEnviar = ColaDeEnvios->front();
     ColaDeEnvios->pop_front();
@@ -447,6 +464,18 @@ void Simulacion::evento_SeLiberaLinea1Router(int M){
 void Simulacion::evento_SeLiberaLinea2Router(int M){
 	printf("Evento: SeLiberaLineaRouter2 \n");
   Reloj = EventoActual->reloj;
+  tiempoArchivos = Reloj - EventoActual->entradaAlSistema;
+  NumeroDeArchivos++;
+  if(EventoActual->tipoArchivo == 1){
+	  NumeroDeArchivos1++;
+	  tiempoArchivos1 = Reloj - EventoActual->entradaAlSistema;
+  }
+  else{
+
+	  NumeroDeArchivos2++;
+	  tiempoArchivos2 = Reloj - EventoActual->entradaAlSistema;
+
+  }
   impresionEstadoActual();
   if( !ColaDeEnvios->empty() ){
     Evento* paraEnviar = ColaDeEnvios->front();
@@ -477,7 +506,8 @@ void Simulacion::evento_LlegaAServidorAntivirus()
 	printf("Evento:LlegaAServidorAntivirus \n");
     Reloj = EventoActual->reloj;
     impresionEstadoActual();
-    Evento* Finaliza = new Evento(Reloj,FinalizaRevisionDeVirus,EventoActual->tamano);
+	Evento* Finaliza = new Evento(Reloj,FinalizaRevisionDeVirus,EventoActual->tamano,EventoActual->tipoArchivo,
+								  EventoActual->entradaAlSistema);
     ManejadorDeEventos->agregarEventoAlaCola(Finaliza);
     delete EventoActual;
 }
@@ -496,14 +526,24 @@ void Simulacion::impresionEstadoActual()
     printf("Cola 1 Computadora C: %d \n Cola 2 Computadora C: %d \n",
 		   ComputadoraC->Tipo1Size(),
 		   ComputadoraC->Tipo2Size());
+	printf("Linea 1 para envios desocupada: %s \n", Linea1_Disponible ? "si" : "no");
+	printf("Linea 1 para envios desocupada: %s \n", Linea2_Disponible ? "si" : "no");
 	printf("Cola de archivos esperando ser pasados al router para envio: %d \n", ColaDeEnvios->size() );
-	if(ColaDeEnvios->size() > 0){
+	/**
+	 * if(ColaDeEnvios->size() > 0){
 		sleep(1);
 	}
+	*/
 
 
-    printf("Linea 1 para envios desocupada: %s \n", Linea1_Disponible ? "si" : "no");
-    printf("Linea 1 para envios desocupada: %s \n", Linea2_Disponible ? "si" : "no");
+}
 
-
+void Simulacion::impresionTerminoSimulacion()
+{
+	printf("Simulacion Termino! \n");
+	printf("Tamano promedio de la cola de envios: %f \n", tamPromedioColaEnvios);
+	printf("Tiempo promedio de los archivos en el sistema en general: %f \n",tiempoArchivos / NumeroDeArchivos);
+	printf("Tiempo promedio en el sistema de los archivos tipo 1: %f \n",tiempoArchivos1/NumeroDeArchivos1);
+	printf("Tiempo promedio en el sistema de los archivos tipo 2: %f \n",tiempoArchivos2/NumeroDeArchivos2);
+  printf("Número promedio de revisiones del antivirus por archivo: %d \n", primedioRevisionesVirus);
 }

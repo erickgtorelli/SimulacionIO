@@ -137,7 +137,8 @@ int Computadora::Tipo2Size()
 }
 
 
-Archivos::Archivos(int tamano)
+Archivos::Archivos(int tamano,double entradaAlSistema)
 {
     this->tamano = tamano;
+	this->entradaAlSistema = entradaAlSistema;
 }

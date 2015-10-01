@@ -23,9 +23,10 @@ public:
 	double reloj;
     Nombre evento;
 	int tamano;
-    
+	int tipoArchivo;
+	double entradaAlSistema;
     Evento();
-    Evento(double reloj,Nombre evento,int tamano = 0);
+	Evento(double reloj,Nombre evento,int tamano = 0,int tipoArchivo = 0,double entradaAlSistema = 0.0);
     ~Evento();
 };
 
