@@ -490,14 +490,14 @@ void Simulacion::impresionEstadoActual()
     printf("Cola 1 Computadora C: %d \n Cola 2 Computadora C: %d \n",
 		   ComputadoraC->Tipo1Size(),
 		   ComputadoraC->Tipo2Size());
-<<<<<<< HEAD
+	printf("Cola de archivos esperando ser pasados al router para envio: %d \n", ColaDeEnvios->size() );
 	if(ColaDeEnvios->size() > 0){
 		sleep(1);
 	}
-	printf("Cola de archivos esperando ser pasados al router para envio: %d \n", ColaDeEnvios->size() );
-=======
+
+
     printf("Linea 1 para envios desocupada: %s \n", Linea1_Disponible ? "si" : "no");
     printf("Linea 1 para envios desocupada: %s \n", Linea2_Disponible ? "si" : "no");
-    printf("Cola de archivos esperando ser pasados al router para envio: %d \n", ColaDeEnvios->size() );
->>>>>>> 162748d0e2de082a169c5388823b32817acf3992
+
+
 }
