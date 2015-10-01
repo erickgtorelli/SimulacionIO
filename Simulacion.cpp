@@ -14,13 +14,13 @@ Simulacion::Simulacion()
         ColaDeEnvios = new std::list<Evento*>;
 	//Iniciarlizar primeros eventos para correr la simulacion
 	Evento* LlegaAC = new Evento(0,LlegaAComputadoraC);
-    Evento* LlegaAB = new Evento(0,LlegaAComputadoraB);
-    Evento* LlegaAA = new Evento(0,LlegaAComputadoraA);
+  Evento* LlegaAB = new Evento(0,LlegaAComputadoraB);
+  Evento* LlegaAA = new Evento(0,LlegaAComputadoraA);
 	Evento* LiberaToken = new Evento(10,LiberaTokenA);
-    ManejadorDeEventos->agregarEventoAlaCola(LlegaAC);
-    ManejadorDeEventos->agregarEventoAlaCola(LlegaAB);
-    ManejadorDeEventos->agregarEventoAlaCola(LlegaAA);
-    ManejadorDeEventos->agregarEventoAlaCola(LiberaToken);
+  ManejadorDeEventos->agregarEventoAlaCola(LlegaAC);
+  ManejadorDeEventos->agregarEventoAlaCola(LlegaAB);
+  ManejadorDeEventos->agregarEventoAlaCola(LlegaAA);
+  ManejadorDeEventos->agregarEventoAlaCola(LiberaToken);
 }
 
 Simulacion::~Simulacion()
@@ -171,6 +171,7 @@ void Simulacion::evento_LiberaTokenA(){
     Reloj = EventoActual->reloj;
     impresionEstadoActual();
     int t = tiempoToken;
+    tieneElToken++;
 	bool archivos = true;
     Archivos* archivo;
 	
@@ -182,13 +183,15 @@ void Simulacion::evento_LiberaTokenA(){
                         }
                         else { //hay minimo 1 archivo de tipo 2
 				
-			  archivo = ComputadoraA->sacarArchivoTipo2(t/0.5);
+			  				archivo = ComputadoraA->sacarArchivoTipo2(t/0.5);
+			  				archivosEnviados++;
         
                         }
     } 
     else { //hay minimo 1 archivo de tipo 1
 			
 			 archivo =  ComputadoraA->sacarArchivoTipo1(t/0.5);
+			 archivosEnviados++;
     }
        
        if(archivos && archivo != nullptr){
@@ -221,6 +224,7 @@ void Simulacion::evento_LiberaTokenB(){
     Reloj = EventoActual->reloj;
     impresionEstadoActual();
     int t = tiempoToken;
+    tieneElToken++;
   bool archivos = true;
     Archivos* archivo;
 
@@ -231,11 +235,13 @@ void Simulacion::evento_LiberaTokenB(){
       }
       else { //hay minimo 1 archivo de tipo 2
 			  archivo = ComputadoraB->sacarArchivoTipo2(t/0.5);
+			  archivosEnviados++;
         
       }
     } 
     else { //hay minimo 1 archivo de tipo 1
 			 archivo =  ComputadoraB->sacarArchivoTipo1(t/0.5);
+			 archivosEnviados++;
     }
 
         if(archivos && archivo != nullptr){
@@ -266,6 +272,7 @@ void Simulacion::evento_LiberaTokenC(){
     Reloj = EventoActual->reloj;
     impresionEstadoActual();
     int t = tiempoToken;
+    tieneElToken++;
   bool archivos = true;
     Archivos* archivo;
 
@@ -276,11 +283,13 @@ void Simulacion::evento_LiberaTokenC(){
       }
       else { //hay minimo 1 archivo de tipo 2
 			  archivo = ComputadoraC->sacarArchivoTipo2(t/0.5);
+			  archivosEnviados++;
         
       }
     } 
     else { //hay minimo 1 archivo de tipo 1
 			 archivo =  ComputadoraC->sacarArchivoTipo1(t/0.5);
+			 archivosEnviados++;
     }
 
        if(archivos && archivo != nullptr){
