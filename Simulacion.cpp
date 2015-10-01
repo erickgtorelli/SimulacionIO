@@ -16,7 +16,7 @@ Simulacion::Simulacion()
 	Evento* LlegaAC = new Evento(0,LlegaAComputadoraC);
     Evento* LlegaAB = new Evento(0,LlegaAComputadoraB);
     Evento* LlegaAA = new Evento(0,LlegaAComputadoraA);
-    Evento* LiberaToken = new Evento(0,LiberaTokenA);
+	Evento* LiberaToken = new Evento(10,LiberaTokenA);
     ManejadorDeEventos->agregarEventoAlaCola(LlegaAC);
     ManejadorDeEventos->agregarEventoAlaCola(LlegaAB);
     ManejadorDeEventos->agregarEventoAlaCola(LlegaAA);
@@ -37,7 +37,7 @@ void Simulacion::run(int tiempoReloj,int tiempoToken)
   		if(!ManejadorDeEventos->colaVacia()){
   			EventoActual = ManejadorDeEventos->sacarSiguienteEvento();
 
-		sleep(1);
+		//sleep(1);
   		switch(EventoActual->evento){
 			case LlegaAComputadoraA:
                 evento_LlegaAComputadoraA();
@@ -173,30 +173,42 @@ void Simulacion::evento_LiberaTokenA(){
     int t = tiempoToken;
 	bool archivos = true;
     Archivos* archivo;
-
+	
     while (t > 0 && archivos) {
-		if (ComputadoraA->Tipo1Vacia()){
+		printf("PWhile");
+    if (ComputadoraA->Tipo1Vacia()){
 			if (ComputadoraA->Tipo2Vacia()){
-        archivos = false;
-      }
-      else { //hay minimo 1 archivo de tipo 2
+				archivos = false;
+                        }
+                        else { //hay minimo 1 archivo de tipo 2
+				
 			  archivo = ComputadoraA->sacarArchivoTipo2(t/0.5);
         
-      }
+                        }
     } 
     else { //hay minimo 1 archivo de tipo 1
+			
 			 archivo =  ComputadoraA->sacarArchivoTipo1(t/0.5);
     }
-
-       if(archivos){
+       
+       if(archivos && archivo != nullptr){
+           int tamano = archivo->tamano;
            //Actualiza tiempo y programa terminaDePonerEnLinea
-           t = t - archivo->tamano * 0.5;
+
+            t = t - tamano  * 0.5;
             Evento* terminaPonerLinea =
-                    new Evento(Reloj + (archivo->tamano * 0.5),TerminaDePonerEnLinea,archivo->tamano);
+                    new Evento(Reloj + (tamano * 0.5),TerminaDePonerEnLinea,tamano);
             ManejadorDeEventos->agregarEventoAlaCola(terminaPonerLinea);
-        }
+            delete archivo;
+            archivo = nullptr;
+       }
+       else{
+           archivos = false;
+       }
+       
   }
     //Se programa el siguiente libera token
+	printf("Siguiente libera token");
     Evento* liberaTokenB = new Evento(Reloj + tiempoToken-t,LiberaTokenB);
     ManejadorDeEventos->agregarEventoAlaCola(liberaTokenB);
   
@@ -226,13 +238,20 @@ void Simulacion::evento_LiberaTokenB(){
 			 archivo =  ComputadoraB->sacarArchivoTipo1(t/0.5);
     }
 
-       if(archivos){
+        if(archivos && archivo != nullptr){
+           int tamano = archivo->tamano;
            //Actualiza tiempo y programa terminaDePonerEnLinea
-           t = t - archivo->tamano * 0.5;
+		   
+            t = t - tamano  * 0.5;
             Evento* terminaPonerLinea =
-                    new Evento(Reloj + (archivo->tamano * 0.5),TerminaDePonerEnLinea,archivo->tamano);
+                    new Evento(Reloj + (tamano * 0.5),TerminaDePonerEnLinea,tamano);
             ManejadorDeEventos->agregarEventoAlaCola(terminaPonerLinea);
-        }
+            delete archivo;
+            archivo = nullptr;
+       }
+       else{
+           archivos = false;
+       }
   }
     //Se programa el siguiente libera token
     Evento* liberaTokenC = new Evento(Reloj + tiempoToken-t,LiberaTokenC);
@@ -264,13 +283,20 @@ void Simulacion::evento_LiberaTokenC(){
 			 archivo =  ComputadoraC->sacarArchivoTipo1(t/0.5);
     }
 
-       if(archivos){
+       if(archivos && archivo != nullptr){
+           int tamano = archivo->tamano;
            //Actualiza tiempo y programa terminaDePonerEnLinea
-           t = t - archivo->tamano * 0.5;
+		  
+            t = t - tamano  * 0.5;
             Evento* terminaPonerLinea =
-                    new Evento(Reloj + (archivo->tamano * 0.5),TerminaDePonerEnLinea,archivo->tamano);
+                    new Evento(Reloj + (tamano * 0.5),TerminaDePonerEnLinea,tamano);
             ManejadorDeEventos->agregarEventoAlaCola(terminaPonerLinea);
-        }
+            delete archivo;
+            archivo = nullptr;
+       }
+       else{
+           archivos = false;
+       }
   }
     //Se programa el siguiente libera token
     Evento* liberaTokenA = new Evento(Reloj + tiempoToken-t,LiberaTokenA);
@@ -335,7 +361,7 @@ void Simulacion::evento_FinalizaRevision(int M){
   
   if( revisiones <= max_revisiones ){
 
-    Evento* paraEnviar = new Evento(Reloj + tiempo_revision, SeEncolaParaEnvio, EventoActual->tamano);
+    Evento* paraEnviar = new Evento(Reloj + tiempo_revision, SeEncolaParaEnvio, M);
     ColaDeEnvios->push_back(paraEnviar);
 
     if (Linea1_Disponible && !ColaDeEnvios->empty() ){

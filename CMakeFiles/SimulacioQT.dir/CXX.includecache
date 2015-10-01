@@ -1,0 +1,38 @@
+#IncludeRegexLine: ^[ 	]*#[ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/erick/Desktop/U/VI_Semestre/IO/SimulacionIO/Computadora.h
+Util.h
+/home/erick/Desktop/U/VI_Semestre/IO/SimulacionIO/Util.h
+
+/home/erick/Desktop/U/VI_Semestre/IO/SimulacionIO/Simulacion.cpp
+Simulacion.h
+/home/erick/Desktop/U/VI_Semestre/IO/SimulacionIO/Simulacion.h
+math.h
+/home/erick/Desktop/U/VI_Semestre/IO/SimulacionIO/math.h
+unistd.h
+-
+
+/home/erick/Desktop/U/VI_Semestre/IO/SimulacionIO/Simulacion.h
+Util.h
+/home/erick/Desktop/U/VI_Semestre/IO/SimulacionIO/Util.h
+cstdlib
+-
+ctime
+-
+iostream
+-
+Computadora.h
+/home/erick/Desktop/U/VI_Semestre/IO/SimulacionIO/Computadora.h
+string
+-
+
+/home/erick/Desktop/U/VI_Semestre/IO/SimulacionIO/Util.h
+list
+-
+

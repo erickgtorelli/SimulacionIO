@@ -1,0 +1,7 @@
+Scanning dependencies of target SimulacioQT
+[ 25%] Building CXX object CMakeFiles/SimulacioQT.dir/Simulacion.cpp.o
+[ 50%] Building CXX object CMakeFiles/SimulacioQT.dir/Util.cpp.o
+[ 75%] Building CXX object CMakeFiles/SimulacioQT.dir/Computadora.cpp.o
+[100%] Building CXX object CMakeFiles/SimulacioQT.dir/main.cpp.o
+Linking CXX executable SimulacioQT
+[100%] Built target SimulacioQT

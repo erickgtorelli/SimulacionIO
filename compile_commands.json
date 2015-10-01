@@ -1,0 +1,22 @@
+[
+{
+  "directory": "/home/erick/Desktop/U/VI_Semestre/IO/SimulacionIO",
+  "command": "/usr/bin/g++     -std=c++11 -g3 -gdwarf-2   -o CMakeFiles/SimulacioQT.dir/Simulacion.cpp.o -c /home/erick/Desktop/U/VI_Semestre/IO/SimulacionIO/Simulacion.cpp",
+  "file": "/home/erick/Desktop/U/VI_Semestre/IO/SimulacionIO/Simulacion.cpp"
+},
+{
+  "directory": "/home/erick/Desktop/U/VI_Semestre/IO/SimulacionIO",
+  "command": "/usr/bin/g++     -std=c++11 -g3 -gdwarf-2   -o CMakeFiles/SimulacioQT.dir/Util.cpp.o -c /home/erick/Desktop/U/VI_Semestre/IO/SimulacionIO/Util.cpp",
+  "file": "/home/erick/Desktop/U/VI_Semestre/IO/SimulacionIO/Util.cpp"
+},
+{
+  "directory": "/home/erick/Desktop/U/VI_Semestre/IO/SimulacionIO",
+  "command": "/usr/bin/g++     -std=c++11 -g3 -gdwarf-2   -o CMakeFiles/SimulacioQT.dir/Computadora.cpp.o -c /home/erick/Desktop/U/VI_Semestre/IO/SimulacionIO/Computadora.cpp",
+  "file": "/home/erick/Desktop/U/VI_Semestre/IO/SimulacionIO/Computadora.cpp"
+},
+{
+  "directory": "/home/erick/Desktop/U/VI_Semestre/IO/SimulacionIO",
+  "command": "/usr/bin/g++     -std=c++11 -g3 -gdwarf-2   -o CMakeFiles/SimulacioQT.dir/main.cpp.o -c /home/erick/Desktop/U/VI_Semestre/IO/SimulacionIO/main.cpp",
+  "file": "/home/erick/Desktop/U/VI_Semestre/IO/SimulacionIO/main.cpp"
+}
+]
