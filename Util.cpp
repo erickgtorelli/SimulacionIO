@@ -9,11 +9,12 @@
 Evento::Evento(){
     
 }
-Evento::Evento(double reloj, Nombre evento, int tamano){
+Evento::Evento(double reloj, Nombre evento, int tamano, int tipoArchivo, double entradaAlSistema){
     this->reloj = reloj;
     this->evento = evento;
     this->tamano = tamano;
-    
+	this->tipoArchivo = tipoArchivo;
+	this->entradaAlSistema = entradaAlSistema;
 }
 Evento::~Evento(){
     

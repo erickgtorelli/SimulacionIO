@@ -14,6 +14,12 @@ private:
     int tiempoToken;
     int archivosEnviados;
     int tieneElToken;
+	double tiempoArchivos;
+	double tiempoArchivos1;
+	double tiempoArchivos2;
+	double NumeroDeArchivos;
+	double NumeroDeArchivos1;
+	double NumeroDeArchivos2;
 	Evento* EventoActual;
 	Util* ManejadorDeEventos;
 	Computadora* ComputadoraA;
@@ -47,6 +53,7 @@ private:
      * Nota: este evento debe ser llamado despues de actualizado el Reloj en cada evento
      */
     void impresionEstadoActual();
+	void impresionTerminoSimulacion();
 public:
 	Simulacion();
 	~Simulacion();

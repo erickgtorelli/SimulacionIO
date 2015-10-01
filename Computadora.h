@@ -5,7 +5,8 @@
 class Archivos{
 public:
     int tamano;
-    Archivos(int tamano);
+	double entradaAlSistema;
+	Archivos(int tamano,double entradaAlSistema);
 };
 
 class Computadora{
