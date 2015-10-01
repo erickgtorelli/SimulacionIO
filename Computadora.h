@@ -5,7 +5,6 @@
 class Archivos{
 public:
     int tamano;
-
     Archivos(int tamano);
 };
 

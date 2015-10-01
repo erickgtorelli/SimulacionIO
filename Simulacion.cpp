@@ -5,6 +5,7 @@ Simulacion::Simulacion()
 {
 	Reloj = 0;
 	srand (time(NULL));
+
 	//Cambiar valor al default para el switch despues
 	EventoActual = 0;
 	ManejadorDeEventos = new Util();
@@ -83,6 +84,7 @@ void Simulacion::run(int tiempoReloj, int tiempoToken, int modoLento)
   		}
 	 }
     }
+    
     printf("Simulacion Termino! \n");
     printf("Tamano promedio de la cola de envios: %d \n", tamPromedioColaEnvios);
 }
@@ -129,7 +131,6 @@ void Simulacion::evento_LlegaAComputadoraB()
     double r = ((double) rand() / (RAND_MAX)); //valor aleatorio entre 0 y 1
      
     double x = sqrt(80*(r+(4/5))) ; //x es una v.a.
-
     //Actualizo el siguiente arribo y lo vuelvo a encolar
     EventoActual->reloj = Reloj + x;
     ManejadorDeEventos->agregarEventoAlaCola(EventoActual);
@@ -182,7 +183,7 @@ void Simulacion::evento_LiberaTokenA(){
     Archivos* archivo;
 	
     while (t > 0 && archivos) {
-		printf("PWhile");
+
     if (ComputadoraA->Tipo1Vacia()){
 			if (ComputadoraA->Tipo2Vacia()){
 				archivos = false;
@@ -217,8 +218,8 @@ void Simulacion::evento_LiberaTokenA(){
        
   }
     //Se programa el siguiente libera token
-	printf("Siguiente libera token");
-    Evento* liberaTokenB = new Evento(Reloj + tiempoToken-t,LiberaTokenB);
+
+	Evento* liberaTokenB = new Evento(Reloj + tiempoToken-t + 1,LiberaTokenB);
     ManejadorDeEventos->agregarEventoAlaCola(liberaTokenB);
   
   delete EventoActual;
@@ -266,7 +267,7 @@ void Simulacion::evento_LiberaTokenB(){
        }
   }
     //Se programa el siguiente libera token
-    Evento* liberaTokenC = new Evento(Reloj + tiempoToken-t,LiberaTokenC);
+	Evento* liberaTokenC = new Evento(Reloj + tiempoToken-t + 1,LiberaTokenC);
     ManejadorDeEventos->agregarEventoAlaCola(liberaTokenC);
   
   delete EventoActual;
@@ -314,7 +315,7 @@ void Simulacion::evento_LiberaTokenC(){
        }
   }
     //Se programa el siguiente libera token
-    Evento* liberaTokenA = new Evento(Reloj + tiempoToken-t,LiberaTokenA);
+	Evento* liberaTokenA = new Evento(Reloj + tiempoToken-t + 1,LiberaTokenA);
     ManejadorDeEventos->agregarEventoAlaCola(liberaTokenA);
   
   delete EventoActual;
@@ -407,7 +408,6 @@ void Simulacion::evento_FinalizaRevision(int M){
 void Simulacion::evento_SeLiberaLinea1Router(int M){
   Reloj = EventoActual->reloj;
   impresionEstadoActual();
-  
   if( !ColaDeEnvios->empty() ){
     Evento* paraEnviar = ColaDeEnvios->front();
     ColaDeEnvios->pop_front();
@@ -428,7 +428,6 @@ void Simulacion::evento_SeLiberaLinea1Router(int M){
 void Simulacion::evento_SeLiberaLinea2Router(int M){
   Reloj = EventoActual->reloj;
   impresionEstadoActual();
-
   if( !ColaDeEnvios->empty() ){
     Evento* paraEnviar = ColaDeEnvios->front();
     ColaDeEnvios->pop_front();
@@ -457,7 +456,6 @@ void Simulacion::evento_LlegaAServidorAntivirus()
 {
     Reloj = EventoActual->reloj;
     impresionEstadoActual();
-
     Evento* Finaliza = new Evento(Reloj,FinalizaRevisionDeVirus,EventoActual->tamano);
     ManejadorDeEventos->agregarEventoAlaCola(Finaliza);
     delete EventoActual;
