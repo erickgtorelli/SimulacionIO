@@ -12,6 +12,8 @@ class Simulacion
 private:
 	double Reloj;
     int tiempoToken;
+    int archivosEnviados;
+    int tieneElToken;
 	Evento* EventoActual;
 	Util* ManejadorDeEventos;
 	Computadora* ComputadoraA;
