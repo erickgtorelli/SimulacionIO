@@ -46,7 +46,7 @@ private:
 public:
 	Simulacion();
 	~Simulacion();
-    void run(int tiempoReloj,int tiempoToken);
+	void run(int tiempoReloj, int tiempoToken, int modoLento);
 
 };
 

@@ -16,11 +16,11 @@ Simulacion::Simulacion()
 	Evento* LlegaAC = new Evento(0,LlegaAComputadoraC);
   Evento* LlegaAB = new Evento(0,LlegaAComputadoraB);
   Evento* LlegaAA = new Evento(0,LlegaAComputadoraA);
-	Evento* LiberaToken = new Evento(10,LiberaTokenA);
+
   ManejadorDeEventos->agregarEventoAlaCola(LlegaAC);
   ManejadorDeEventos->agregarEventoAlaCola(LlegaAB);
   ManejadorDeEventos->agregarEventoAlaCola(LlegaAA);
-  ManejadorDeEventos->agregarEventoAlaCola(LiberaToken);
+
 }
 
 Simulacion::~Simulacion()
@@ -29,15 +29,20 @@ Simulacion::~Simulacion()
 }
 
 
-void Simulacion::run(int tiempoReloj,int tiempoToken)
+void Simulacion::run(int tiempoReloj, int tiempoToken, int modoLento)
 {
+	Evento* LiberaToken = new Evento(tiempoToken,LiberaTokenA);
+	ManejadorDeEventos->agregarEventoAlaCola(LiberaToken);
+
     this->tiempoToken = tiempoToken;
 
     while(Reloj < tiempoReloj){
   		if(!ManejadorDeEventos->colaVacia()){
   			EventoActual = ManejadorDeEventos->sacarSiguienteEvento();
 
-		//sleep(1);
+		if(modoLento == 1)
+			sleep(1);
+
   		switch(EventoActual->evento){
 			case LlegaAComputadoraA:
                 evento_LlegaAComputadoraA();
