@@ -17,7 +17,8 @@ Simulacion::Simulacion()
 	Evento* LlegaAC = new Evento(0,LlegaAComputadoraC);
   Evento* LlegaAB = new Evento(0,LlegaAComputadoraB);
   Evento* LlegaAA = new Evento(0,LlegaAComputadoraA);
-
+  Evento* LiberaToken = new Evento(1.5,LiberaTokenA);
+  ManejadorDeEventos->agregarEventoAlaCola(LiberaToken);
   ManejadorDeEventos->agregarEventoAlaCola(LlegaAC);
   ManejadorDeEventos->agregarEventoAlaCola(LlegaAB);
   ManejadorDeEventos->agregarEventoAlaCola(LlegaAA);
@@ -32,8 +33,7 @@ Simulacion::~Simulacion()
 
 void Simulacion::run(int tiempoReloj, int tiempoToken, int modoLento)
 {
-	Evento* LiberaToken = new Evento(tiempoToken,LiberaTokenA);
-	ManejadorDeEventos->agregarEventoAlaCola(LiberaToken);
+
 
     this->tiempoToken = tiempoToken;
 
@@ -92,6 +92,7 @@ void Simulacion::run(int tiempoReloj, int tiempoToken, int modoLento)
 void Simulacion::evento_LlegaAComputadoraA()
 {
     Reloj = EventoActual->reloj;
+	printf("Evento: LlegaAComputadoraA \n");
     impresionEstadoActual();
 	//Crear archivo y meterlo en la cola de archivos correspondiente
 	Archivos* archivo = new Archivos(generarTamanoDelArchivo());
@@ -116,6 +117,7 @@ void Simulacion::evento_LlegaAComputadoraA()
 void Simulacion::evento_LlegaAComputadoraB()
 {
     Reloj = EventoActual->reloj;
+	printf("Evento: LlegaAComputadoraB \n");
     impresionEstadoActual();
 
     //Crear archivo y meterlo en la cola de archivos correspondiente
@@ -139,6 +141,7 @@ void Simulacion::evento_LlegaAComputadoraB()
 void Simulacion::evento_LlegaAComputadoraC()
 {
     Reloj = EventoActual->reloj;
+	printf("Evento: LlegaAComputadoraC \n");
     impresionEstadoActual();
     double z = 0;
     double n = 0;
@@ -174,7 +177,7 @@ int Simulacion::generaPrioridad(){
 }
 
 void Simulacion::evento_LiberaTokenA(){
-
+	printf("Evento: LiberaTokenA \n");
     Reloj = EventoActual->reloj;
     impresionEstadoActual();
     int t = tiempoToken;
@@ -192,13 +195,16 @@ void Simulacion::evento_LiberaTokenA(){
 				
 			  				archivo = ComputadoraA->sacarArchivoTipo2(t/0.5);
 			  				archivosEnviados++;
-        
+
                         }
     } 
     else { //hay minimo 1 archivo de tipo 1
 			
 			 archivo =  ComputadoraA->sacarArchivoTipo1(t/0.5);
 			 archivosEnviados++;
+			 if(archivo == nullptr && !ComputadoraA->Tipo2Vacia()){
+				 archivo = ComputadoraA->sacarArchivoTipo2(t/0.5);
+			 }
     }
        
        if(archivos && archivo != nullptr){
@@ -219,7 +225,7 @@ void Simulacion::evento_LiberaTokenA(){
   }
     //Se programa el siguiente libera token
 
-	Evento* liberaTokenB = new Evento(Reloj + tiempoToken-t + 1,LiberaTokenB);
+	Evento* liberaTokenB = new Evento(Reloj + tiempoToken-t,LiberaTokenB);
     ManejadorDeEventos->agregarEventoAlaCola(liberaTokenB);
   
   delete EventoActual;
@@ -227,7 +233,7 @@ void Simulacion::evento_LiberaTokenA(){
 }
 
 void Simulacion::evento_LiberaTokenB(){
-
+	printf("Evento: LiberaTokenB \n");
     Reloj = EventoActual->reloj;
     impresionEstadoActual();
     int t = tiempoToken;
@@ -249,6 +255,9 @@ void Simulacion::evento_LiberaTokenB(){
     else { //hay minimo 1 archivo de tipo 1
 			 archivo =  ComputadoraB->sacarArchivoTipo1(t/0.5);
 			 archivosEnviados++;
+			 if(archivo == nullptr && !ComputadoraA->Tipo2Vacia()){
+				 archivo = ComputadoraA->sacarArchivoTipo2(t/0.5);
+			 }
     }
 
         if(archivos && archivo != nullptr){
@@ -267,7 +276,7 @@ void Simulacion::evento_LiberaTokenB(){
        }
   }
     //Se programa el siguiente libera token
-	Evento* liberaTokenC = new Evento(Reloj + tiempoToken-t + 1,LiberaTokenC);
+	Evento* liberaTokenC = new Evento(Reloj + tiempoToken-t,LiberaTokenC);
     ManejadorDeEventos->agregarEventoAlaCola(liberaTokenC);
   
   delete EventoActual;
@@ -275,7 +284,7 @@ void Simulacion::evento_LiberaTokenB(){
 }
 
 void Simulacion::evento_LiberaTokenC(){
-
+	printf("Evento: LiberaTokenC \n");
     Reloj = EventoActual->reloj;
     impresionEstadoActual();
     int t = tiempoToken;
@@ -297,6 +306,9 @@ void Simulacion::evento_LiberaTokenC(){
     else { //hay minimo 1 archivo de tipo 1
 			 archivo =  ComputadoraC->sacarArchivoTipo1(t/0.5);
 			 archivosEnviados++;
+			 if(archivo == nullptr && !ComputadoraA->Tipo2Vacia()){
+				 archivo = ComputadoraA->sacarArchivoTipo2(t/0.5);
+			 }
     }
 
        if(archivos && archivo != nullptr){
@@ -315,7 +327,7 @@ void Simulacion::evento_LiberaTokenC(){
        }
   }
     //Se programa el siguiente libera token
-	Evento* liberaTokenA = new Evento(Reloj + tiempoToken-t + 1,LiberaTokenA);
+	Evento* liberaTokenA = new Evento(Reloj + tiempoToken-t,LiberaTokenA);
     ManejadorDeEventos->agregarEventoAlaCola(liberaTokenA);
   
   delete EventoActual;
@@ -325,8 +337,9 @@ void Simulacion::evento_LiberaTokenC(){
 void Simulacion::evento_TerminaDePonerEnLinea()
 {
     Reloj = EventoActual->reloj;
-    impresionEstadoActual();
-    
+	printf("Evento: TerminaDePonerEnLinea \n");
+	impresionEstadoActual();
+
     Evento* llegaAServidor = new Evento(Reloj + 1,LlegaAServidorAntivirus,EventoActual->tamano);
     ManejadorDeEventos->agregarEventoAlaCola(llegaAServidor);
     
@@ -335,7 +348,7 @@ void Simulacion::evento_TerminaDePonerEnLinea()
 }
 
 void Simulacion::evento_FinalizaRevision(int M){
-
+	printf("Evento: FinalizaRevision");
   Reloj = EventoActual->reloj;
   impresionEstadoActual();
 
@@ -406,6 +419,7 @@ void Simulacion::evento_FinalizaRevision(int M){
 }
 
 void Simulacion::evento_SeLiberaLinea1Router(int M){
+	printf("Evento: SeLiberaLineaRouter1 \n");
   Reloj = EventoActual->reloj;
   impresionEstadoActual();
   if( !ColaDeEnvios->empty() ){
@@ -426,6 +440,7 @@ void Simulacion::evento_SeLiberaLinea1Router(int M){
 }
 
 void Simulacion::evento_SeLiberaLinea2Router(int M){
+	printf("Evento: SeLiberaLineaRouter2 \n");
   Reloj = EventoActual->reloj;
   impresionEstadoActual();
   if( !ColaDeEnvios->empty() ){
@@ -454,6 +469,7 @@ void Simulacion::PrimedioColaEnvios(){
 
 void Simulacion::evento_LlegaAServidorAntivirus()
 {
+	printf("Evento:LlegaAServidorAntivirus \n");
     Reloj = EventoActual->reloj;
     impresionEstadoActual();
     Evento* Finaliza = new Evento(Reloj,FinalizaRevisionDeVirus,EventoActual->tamano);
@@ -464,7 +480,7 @@ void Simulacion::evento_LlegaAServidorAntivirus()
 void Simulacion::impresionEstadoActual()
 {
     printf("Reloj: %f \n",Reloj);
-    printf("Evento actual: %d \n",EventoActual->evento);
+	//printf("Evento actual: %d \n",EventoActual->evento);
     printf("Cola 1 Computadora A: %d \n Cola 2 Computadora A: %d \n",
 		   ComputadoraA->Tipo1Size(),
 		   ComputadoraA->Tipo2Size());
@@ -474,5 +490,8 @@ void Simulacion::impresionEstadoActual()
     printf("Cola 1 Computadora C: %d \n Cola 2 Computadora C: %d \n",
 		   ComputadoraC->Tipo1Size(),
 		   ComputadoraC->Tipo2Size());
-    printf("Cola de archivos esperando ser pasados al router para envio: %d \n", ColaDeEnvios->size() );
+	if(ColaDeEnvios->size() > 0){
+		sleep(1);
+	}
+	printf("Cola de archivos esperando ser pasados al router para envio: %d \n", ColaDeEnvios->size() );
 }
