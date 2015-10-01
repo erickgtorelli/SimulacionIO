@@ -87,6 +87,7 @@ void Simulacion::run(int tiempoReloj, int tiempoToken, int modoLento)
     
     printf("Simulacion Termino! \n");
     printf("Tamano promedio de la cola de envios: %d \n", tamPromedioColaEnvios);
+    printf("Número promedio de revisiones del antivirus por archivo: %d \n", primedioRevisionesVirus);
 }
 
 void Simulacion::evento_LlegaAComputadoraA()
@@ -376,10 +377,9 @@ void Simulacion::evento_FinalizaRevision(int M){
     }
   }
 
-  /* Averiguar cuanto dura la revision */
-  for(int i = 1; i <= revisiones; ++i){
-    tiempo_revision += M/(8*i);
-  }
+  ++totalArchivosRevisados;
+  acumuladoRevisionesVirus += revisiones;
+  primedioRevisionesVirus = acumuladoRevisionesVirus / totalArchivosRevisados;
 
   /* Se crea un evento para enviar archivo
    * Se encola el evento en la cola de envios
@@ -389,6 +389,11 @@ void Simulacion::evento_FinalizaRevision(int M){
    */
  
   if( revisiones <= max_revisiones ){
+
+    /* Averiguar cuanto dura la revision */
+    for(int i = 1; i <= revisiones; ++i){
+      tiempo_revision += M/(8*i);
+    }
 
     Evento* paraEnviar = new Evento(Reloj + tiempo_revision, SeEncolaParaEnvio, M);
     ColaDeEnvios->push_back(paraEnviar);
@@ -481,6 +486,7 @@ void Simulacion::impresionEstadoActual()
 {
     printf("Reloj: %f \n",Reloj);
 	//printf("Evento actual: %d \n",EventoActual->evento);
+    printf("Tiempo T del token: %d \n", tiempoToken);
     printf("Cola 1 Computadora A: %d \n Cola 2 Computadora A: %d \n",
 		   ComputadoraA->Tipo1Size(),
 		   ComputadoraA->Tipo2Size());

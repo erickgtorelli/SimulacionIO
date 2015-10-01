@@ -26,6 +26,9 @@ private:
     int tamColaEnvios;
     double tamPromedioColaEnvios;
     int cantRevisionesColaEnvios;
+    int totalArchivosRevisados;
+    int acumuladoRevisionesVirus;
+    double primedioRevisionesVirus;
 
     inline int generarTamanoDelArchivo(){return rand() % 64 + 1;}
     void evento_LiberaTokenA();
