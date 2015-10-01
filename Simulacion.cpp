@@ -79,6 +79,7 @@ void Simulacion::run(int tiempoReloj,int tiempoToken)
 	 }
     }
     printf("Simulacion Termino!");
+    std::cout << "\nTamano promedio de la cola de envios: " << tamPromedioColaEnvios << std::endl;
 }
 
 void Simulacion::evento_LlegaAComputadoraA()
@@ -372,10 +373,12 @@ void Simulacion::evento_FinalizaRevision(int M){
 
     Evento* paraEnviar = new Evento(Reloj + tiempo_revision, SeEncolaParaEnvio, M);
     ColaDeEnvios->push_back(paraEnviar);
+    PrimedioColaEnvios();
 
     if (Linea1_Disponible && !ColaDeEnvios->empty() ){
       paraEnviar = ColaDeEnvios->front();
       ColaDeEnvios->pop_front();
+      PrimedioColaEnvios();
       paraEnviar->evento = SeLiberaLineaRouter1;
 
       ManejadorDeEventos->agregarEventoAlaCola(paraEnviar);
@@ -384,6 +387,7 @@ void Simulacion::evento_FinalizaRevision(int M){
     else if( Linea2_Disponible && !ColaDeEnvios->empty() ){
       paraEnviar = ColaDeEnvios->front();
       ColaDeEnvios->pop_front();
+      PrimedioColaEnvios();
       paraEnviar->evento = SeLiberaLineaRouter2;
       
       ManejadorDeEventos->agregarEventoAlaCola(paraEnviar);
@@ -402,6 +406,7 @@ void Simulacion::evento_SeLiberaLinea1Router(int M){
   if( !ColaDeEnvios->empty() ){
     Evento* paraEnviar = ColaDeEnvios->front();
     ColaDeEnvios->pop_front();
+    PrimedioColaEnvios();
     paraEnviar->evento = SeLiberaLineaRouter1;
     paraEnviar->reloj += M/64;
     ManejadorDeEventos->agregarEventoAlaCola(paraEnviar);
@@ -422,6 +427,7 @@ void Simulacion::evento_SeLiberaLinea2Router(int M){
   if( !ColaDeEnvios->empty() ){
     Evento* paraEnviar = ColaDeEnvios->front();
     ColaDeEnvios->pop_front();
+    PrimedioColaEnvios();
     paraEnviar->evento = SeLiberaLineaRouter2;
     paraEnviar->reloj += M/64;
     ManejadorDeEventos->agregarEventoAlaCola(paraEnviar);
@@ -432,6 +438,13 @@ void Simulacion::evento_SeLiberaLinea2Router(int M){
   }
 
   delete EventoActual;
+
+}
+
+void Simulacion::PrimedioColaEnvios(){
+  ++cantRevisionesColaEnvios;
+  tamColaEnvios = ColaDeEnvios->size();
+  tamPromedioColaEnvios = tamColaEnvios / cantRevisionesColaEnvios;
 
 }
 
@@ -458,4 +471,5 @@ void Simulacion::impresionEstadoActual()
     printf("Cola 1 Computadora C: %d \n Cola 2 Computadora C: %d \n",
 		   ComputadoraC->Tipo1Size(),
 		   ComputadoraC->Tipo2Size());
+    printf("Cola de archivos esperando ser pasados al router para envio: %d \n", ColaDeEnvios->size() );
 }

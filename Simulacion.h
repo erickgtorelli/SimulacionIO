@@ -23,6 +23,9 @@ private:
     bool Linea1_Disponible = true;
     bool Linea2_Disponible = true;
     std::list<Evento*>* ColaDeEnvios;           // La cola sigue el orden FIFO
+    int tamColaEnvios;
+    double tamPromedioColaEnvios;
+    int cantRevisionesColaEnvios;
 
     inline int generarTamanoDelArchivo(){return rand() % 64 + 1;}
     void evento_LiberaTokenA();
@@ -36,6 +39,7 @@ private:
     void evento_FinalizaRevision(int M);
     void evento_SeLiberaLinea1Router(int M);
     void evento_SeLiberaLinea2Router(int M);
+    void PrimedioColaEnvios();
     void evento_LlegaAServidorAntivirus();
     /**
      * @brief impresionEstadoActual muestra informacion basica del estado de la simulacion
