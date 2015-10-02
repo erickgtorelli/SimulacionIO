@@ -33,7 +33,7 @@ Simulacion::~Simulacion()
 }
 
 
-void Simulacion::run(int tiempoReloj, int tiempoToken, int modoLento)
+double* Simulacion::run(int tiempoReloj, int tiempoToken, int modoLento)
 {
 
 
@@ -84,7 +84,10 @@ void Simulacion::run(int tiempoReloj, int tiempoToken, int modoLento)
 	 }
     }
     
-   impresionTerminoSimulacion();
+  impresionTerminoSimulacion();
+
+  return proms;
+
 }
 
 void Simulacion::evento_LlegaAComputadoraA()
@@ -383,7 +386,7 @@ void Simulacion::evento_FinalizaRevision(int M){
 
   ++totalArchivosRevisados;
   acumuladoRevisionesVirus += revisiones;
-  primedioRevisionesVirus = acumuladoRevisionesVirus / totalArchivosRevisados;
+  promedioRevisionesVirus = acumuladoRevisionesVirus / totalArchivosRevisados;
 
   /* Se crea un evento para enviar archivo
    * Se encola el evento en la cola de envios
@@ -540,10 +543,17 @@ void Simulacion::impresionEstadoActual()
 
 void Simulacion::impresionTerminoSimulacion()
 {
-	printf("Simulacion Termino! \n");
+	printf("\nSimulacion Termino! \n");
 	printf("Tamano promedio de la cola de envios: %f \n", tamPromedioColaEnvios);
 	printf("Tiempo promedio de los archivos en el sistema en general: %f \n",tiempoArchivos / NumeroDeArchivos);
 	printf("Tiempo promedio en el sistema de los archivos tipo 1: %f \n",tiempoArchivos1/NumeroDeArchivos1);
 	printf("Tiempo promedio en el sistema de los archivos tipo 2: %f \n",tiempoArchivos2/NumeroDeArchivos2);
-  printf("Número promedio de revisiones del antivirus por archivo: %d \n", primedioRevisionesVirus);
+  printf("Numero promedio de revisiones del antivirus por archivo: %d \n", promedioRevisionesVirus);
+  
+  proms[0] = tamPromedioColaEnvios;
+  proms[1] = tiempoArchivos / NumeroDeArchivos;
+  proms[2] = tiempoArchivos1 / NumeroDeArchivos1;
+  proms[3] = tiempoArchivos2 / NumeroDeArchivos2;
+  proms[4] = promedioRevisionesVirus;
+
 }

@@ -7,10 +7,12 @@
 #include <iostream>
 #include "Computadora.h"
 #include <string>
+
 class Simulacion
 {
 private:
 	double Reloj;
+
     int tiempoToken;
     int archivosEnviados;
     int tieneElToken;
@@ -34,7 +36,9 @@ private:
     int cantRevisionesColaEnvios;
     int totalArchivosRevisados;
     int acumuladoRevisionesVirus;
-    double primedioRevisionesVirus;
+    double promedioRevisionesVirus;
+
+    double proms[5];
 
     inline int generarTamanoDelArchivo(){return rand() % 64 + 1;}
     void evento_LiberaTokenA();
@@ -60,7 +64,7 @@ private:
 public:
 	Simulacion();
 	~Simulacion();
-	void run(int tiempoReloj, int tiempoToken, int modoLento);
+	double* run(int tiempoReloj, int tiempoToken, int modoLento);
 
 };
 
